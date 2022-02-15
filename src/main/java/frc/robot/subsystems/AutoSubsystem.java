@@ -1,13 +1,11 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.DriveTrain.Motor;
 import edu.wpi.first.wpilibj.RobotState;
-import edu.wpi.first.wpilibj.SerialPort;
 
 public class AutoSubsystem extends SubsystemBase {
   /**

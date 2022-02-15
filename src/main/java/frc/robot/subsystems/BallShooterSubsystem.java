@@ -6,6 +6,8 @@ import frc.robot.RobotContainer;
 import frc.robot.utils.Constants;
 import frc.robot.utils.LimeLight;
 
+import java.lang.module.ModuleDescriptor.Requires;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -36,8 +38,8 @@ public class BallShooterSubsystem extends SubsystemBase {
 
     */
     //double shooterRPM = 804+528*dist+-35.6*dist*dist;
-    double joyStickThrottle = RobotContainer.INSTANCE.joystick.getThrottle();
-    double shooterThrottle = (-0.5*joyStickThrottle)+0.5;
+    //double joyStickThrottle = joystick.getThrottle();
+    double shooterThrottle = (-0.5*(RobotContainer.joystick.getThrottle()))+0.5;
     shooterMotor.set(shooterThrottle);
     SmartDashboard.putNumber("ShooterThrottle", shooterThrottle);
     //SmartDashboard.putNumber("ShooterRPM", shooterMotorEncoder.getVelocity());

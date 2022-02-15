@@ -6,8 +6,15 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.AutoDriveNoShoot;
+import frc.robot.subsystems.AutoSubsystem;
+import frc.robot.subsystems.BallIndexerSubsystem;
+import frc.robot.subsystems.BallRejectSubsystem;
+import frc.robot.subsystems.BallShooterSubsystem;
+import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.PivoterSubsystem;
+import frc.robot.subsystems.SolenoidSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /**
@@ -18,9 +25,15 @@ import edu.wpi.first.wpilibj2.command.Command;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  private final AutoSubsystem m_examplSubsystem = new AutoSubsystem();
+  private final SolenoidSubsystem m_solenoid = new SolenoidSubsystem(2,3);
+  private final BallShooterSubsystem m_ballShooter = new BallShooterSubsystem();
+  private final BallIndexerSubsystem m_ballIndexer = new BallIndexerSubsystem();
+  private final BallRejectSubsystem m_ballRejecter = new BallRejectSubsystem();
+  private final PivoterSubsystem m_limelightPivoter = new PivoterSubsystem();
+  public static DriveTrain m_driveTrain = new DriveTrain();
 
-  private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
+  private final Command m_autoCommand = new AutoDriveNoShoot();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {

@@ -14,6 +14,7 @@ import frc.robot.subsystems.BallIndexerSubsystem;
 import frc.robot.subsystems.BallRejectSubsystem;
 import frc.robot.subsystems.BallShooterSubsystem;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.PivoterSubsystem;
 import frc.robot.subsystems.SolenoidSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -30,6 +31,7 @@ public class RobotContainer {
   private final SolenoidSubsystem m_solenoid = new SolenoidSubsystem(2,3);
   private final BallShooterSubsystem m_ballShooter = new BallShooterSubsystem();
   private final BallIndexerSubsystem m_ballIndexer = new BallIndexerSubsystem();
+  private final IntakeSubsystem m_ballIntake = new IntakeSubsystem();
   private final BallRejectSubsystem m_ballRejecter = new BallRejectSubsystem();
   private final PivoterSubsystem m_limelightPivoter = new PivoterSubsystem();
   public static DriveTrain m_driveTrain = new DriveTrain();
@@ -39,6 +41,7 @@ public class RobotContainer {
   public static Joystick joystick = new Joystick(0);
   public JoystickButton shootButton;
   public JoystickButton indexButton;
+  public JoystickButton intakeButton;
   public JoystickButton switchPressure;
 
 
@@ -64,7 +67,8 @@ public class RobotContainer {
     indexButton = new JoystickButton(joystick, 1);
     indexButton.whileHeld(() -> m_ballIndexer.enableIndexer()).whenReleased(() -> m_ballIndexer.disableIndexer());
 
-
+    intakeButton = new JoystickButton(joystick, 4);
+    intakeButton.whileHeld(() -> m_ballIntake.enableIntaker()).whenReleased(() -> m_ballIndexer.disableIndexer());
 
   }
 

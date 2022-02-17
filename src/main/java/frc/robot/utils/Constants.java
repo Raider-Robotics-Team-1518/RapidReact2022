@@ -5,6 +5,8 @@ public class Constants {
 
     public static final int BallIndexerID = 12;
 
+    public static final int BallIntakerID = 13;
+
     public static final int RightFrontID = 2;
     public static final int RightRearID = 1;
 

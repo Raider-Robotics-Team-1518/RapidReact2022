@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.AutoDriveNoShoot;
 import frc.robot.commands.FirePiston;
-import frc.robot.subsystems.AutoSubsystem;
 import frc.robot.subsystems.BallIndexerSubsystem;
 import frc.robot.subsystems.BallRejectSubsystem;
 import frc.robot.subsystems.BallShooterSubsystem;
@@ -28,7 +27,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final SolenoidSubsystem m_solenoid = new SolenoidSubsystem(2,3);
+  private final SolenoidSubsystem m_solenoid = new SolenoidSubsystem(0,1);
   private final BallShooterSubsystem m_ballShooter = new BallShooterSubsystem();
   private final BallIndexerSubsystem m_ballIndexer = new BallIndexerSubsystem();
   private final IntakeSubsystem m_ballIntake = new IntakeSubsystem();
@@ -68,7 +67,7 @@ public class RobotContainer {
     indexButton.whileHeld(() -> m_ballIndexer.enableIndexer()).whenReleased(() -> m_ballIndexer.disableIndexer());
 
     intakeButton = new JoystickButton(joystick, 4);
-    intakeButton.whileHeld(() -> m_ballIntake.enableIntaker()).whenReleased(() -> m_ballIndexer.disableIndexer());
+    intakeButton.whileHeld(() -> m_ballIntake.enableIntaker()).whenReleased(() -> m_ballIntake.disableIntaker());
 
   }
 

@@ -2,12 +2,16 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utils.Constants;
 import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SerialPort;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.*;
 
 public class DriveTrain extends SubsystemBase {
   private final static WPI_TalonFX rightFront = new WPI_TalonFX(Constants.RightFrontID);
@@ -29,11 +33,13 @@ public class DriveTrain extends SubsystemBase {
     leftMotorGroup.setInverted(true);
     gyro = new AHRS(SerialPort.Port.kUSB);
     gyro.reset();
+    resetAllEncoders();
 
   }
 
   @Override
   public void periodic() {
+    updateEncoders();
   }
 
   @Override
@@ -41,9 +47,8 @@ public class DriveTrain extends SubsystemBase {
   }
 
 
-  public void driveByStick(final double liveX, final double liveZ) {
-    double fixedLiveZ = Math.abs(liveZ) < deadband ? 0.0d : liveZ;
-    m_drive.arcadeDrive(liveX, fixedLiveZ);
+  public void driveByStick(Joystick stick) {
+    m_drive.arcadeDrive(stick.getY()*0.75d, -stick.getZ()*0.5d);
   }
 
   public void autonomousDrive(final double liveX, final double liveZ) {
@@ -94,17 +99,24 @@ public class DriveTrain extends SubsystemBase {
   }
 
   public double getEncoderAverage(){
-    updateEncoders();
-    return Math.abs(leftFront.getSelectedSensorPosition()) + Math.abs(rightFront.getSelectedSensorPosition()) / 2;
+    return (Math.abs(leftFront.getSelectedSensorPosition()) + Math.abs(rightFront.getSelectedSensorPosition())) / 2;
   }
 
-  public void driveByStick(final double liveX, final double liveY, final double liveZ) {
-    m_drive.arcadeDrive(liveX, liveZ);
+  public void setNeutralMode(NeutralMode mode){
+    leftFront.setNeutralMode(mode);
+    leftRear.setNeutralMode(mode);
+    rightFront.setNeutralMode(mode);
+    rightRear.setNeutralMode(mode);
   }
 
   public void updateEncoders(){
-    m_leftEncoder = leftFront.getSelectedSensorPosition();
-    m_rightEncoder = rightFront.getSelectedSensorPosition();
+    //m_leftEncoder = leftFront.getSelectedSensorPosition();
+    //m_rightEncoder = rightFront.getSelectedSensorPosition();
+    SmartDashboard.putNumber("ENC_Average", getEncoderAverage());
+    SmartDashboard.putNumber("ENC_RightFront", rightFront.getSelectedSensorPosition());
+    SmartDashboard.putNumber("ENC_LeftFront", leftFront.getSelectedSensorPosition());
+    SmartDashboard.putNumber("ENC_RightRear", rightRear.getSelectedSensorPosition());
+    SmartDashboard.putNumber("ENC_LeftRear", leftRear.getSelectedSensorPosition());
 
   }
 

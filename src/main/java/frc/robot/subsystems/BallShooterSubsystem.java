@@ -24,7 +24,7 @@ public class BallShooterSubsystem extends SubsystemBase {
   public static BallShooterSubsystem INST;
   public BallShooterSubsystem() {
     shooterMotorEncoder.setPosition(0);
-    setShooterIdleMode(IdleMode.kBrake);
+    setShooterIdleMode(IdleMode.kCoast);
     INST = this;
   }
 

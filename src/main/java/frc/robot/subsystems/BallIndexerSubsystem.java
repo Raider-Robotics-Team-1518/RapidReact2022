@@ -20,7 +20,7 @@ public class BallIndexerSubsystem extends SubsystemBase {
         if(override) {
             return;
         }
-        indexMotor.set(-0.5d);
+        indexMotor.set(Constants.IndexSpeed);
     }
 
     public void disableIndexer() {

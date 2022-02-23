@@ -4,7 +4,6 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.DriveTrain.Motor;
 import edu.wpi.first.wpilibj.RobotState;
 
 public class AutoSubsystem extends SubsystemBase {
@@ -12,8 +11,8 @@ public class AutoSubsystem extends SubsystemBase {
    * @author MorinehtarBlue
    *
    */
-  double circumferenceInInches = 25.0;
-  int pulsesPerRotation = 21934;
+  double circumferenceInInches = 18.4;
+  int pulsesPerRotation = 21934; //2048;
   double distanceToTravel = 0;
   double startPosition = 0;
   double currentAngle = 0;
@@ -21,20 +20,20 @@ public class AutoSubsystem extends SubsystemBase {
   double targetPulseCount = 0;
   double targetPosition = 0;
   double drivePower = 0;
-  double AUTO_MAX_Y = 0.15;  // Maximum power for strafe
-  double AUTO_MAX_X = 0.15;  // Maximum power for forward/back
-  double AUTO_MAX_Z = 0.25;  // Maximum power to rotate
+  double AUTO_MAX_Y = 0.35;  // Maximum power for strafe
+  double AUTO_MAX_X = 0.35;  // Maximum power for forward/back
+  double AUTO_MAX_Z = 0.40;  // Maximum power to rotate
 
   private DriveTrain a_drive = RobotContainer.m_driveTrain;
 
   public AutoSubsystem() {
-    setNeutralMode(NeutralMode.Coast);
+    RobotContainer.m_driveTrain.setNeutralMode(NeutralMode.Coast);
     resetMotorPositions();
   }
 
   @Override
   public void periodic() {
-
+	RobotContainer.m_driveTrain.updateEncoders();
   }
 
   @Override
@@ -43,8 +42,8 @@ public class AutoSubsystem extends SubsystemBase {
   }
 
   public double getZ(double angleToRotateTo) {
-    if(Math.abs(a_drive.gyro.getAngle() - angleToRotateTo) > 5.0d) {
-      if(a_drive.gyro.getAngle() - angleToRotateTo < 0) {
+    if(Math.abs(RobotContainer.m_driveTrain.gyro.getAngle() - angleToRotateTo) > 5.0d) {
+      if(RobotContainer.m_driveTrain.gyro.getAngle() - angleToRotateTo < 0) {
         return 0.2d;
       } else {
         return 0.2d;
@@ -54,25 +53,17 @@ public class AutoSubsystem extends SubsystemBase {
   }
 
   public void resetMotorPositions() {
-    a_drive.getMotor(Motor.RIGHT_FRONT).setSelectedSensorPosition(0.0d);
-    a_drive.getMotor(Motor.LEFT_FRONT).setSelectedSensorPosition(0.0d);
-  }
-
-  public void setNeutralMode(NeutralMode mode) {
-    a_drive.getMotor(Motor.RIGHT_FRONT).setNeutralMode(mode);
-    a_drive.getMotor(Motor.RIGHT_REAR).setNeutralMode(mode);
-    a_drive.getMotor(Motor.LEFT_FRONT).setNeutralMode(mode);
-    a_drive.getMotor(Motor.LEFT_REAR).setNeutralMode(mode);
+    RobotContainer.m_driveTrain.resetAllEncoders();
   }
 
   public double getStartPos() {
-    return a_drive.getMotor(Motor.RIGHT_FRONT).getSelectedSensorPosition();
+    return RobotContainer.m_driveTrain.getEncoderAverage();
   }
 
   protected boolean hasDrivenFarEnough(double startPos, double distance) {
 		//currentPosition = ((Robot.rm.lift.getSensorCollection().getQuadraturePosition() + Robot.rm.climb.getSensorCollection().getQuadraturePosition()) / 2) ;
-		currentPosition = (a_drive.getEncoderAverage());
-		targetPulseCount = (distance / circumferenceInInches) * pulsesPerRotation ;
+		currentPosition = (RobotContainer.m_driveTrain.getEncoderAverage());
+		targetPulseCount = distance / circumferenceInInches * pulsesPerRotation;
 		targetPosition = startPos + targetPulseCount;
 		if (RobotState.isAutonomous() == true) {
 			if (distance > 0) { // Driving FORWARD
@@ -99,30 +90,31 @@ public class AutoSubsystem extends SubsystemBase {
 
    
 
-    protected boolean gyroTurn(double targetAngle) {
+    protected boolean gyroTurn(double degrees) {
 		a_drive.gyro.reset();
-		while ((RobotState.isAutonomous() == true) && (Math.abs(readGyro()) < Math.abs(targetAngle)) && (Math.abs(calcP(targetAngle)) > 0.25)) {
-			// a_drive.drive(0, 0, calcP(targetAngle));//(0, calcP(targetAngle));
+		while ((RobotState.isAutonomous() == true) && (Math.abs(readGyro()) < Math.abs(degrees))) {
+			RobotContainer.m_driveTrain.autonomousDrive(0, calcP(degrees));
 		}
-		stop();	
+		stop();
 		return true;
 	}
     
 	protected boolean gyroDrive(double distance) {
-		a_drive.gyro.reset();
-		a_drive.resetAllEncoders();
-		startPosition = a_drive.getEncoderAverage();
+		RobotContainer.m_driveTrain.gyro.reset();
+		RobotContainer.m_driveTrain.resetAllEncoders();
+		startPosition = RobotContainer.m_driveTrain.getEncoderAverage();
 		//double targetPosition = (distance / circumferenceInInches * pulsesPerRotation);
-		System.out.println(hasDrivenFarEnough(startPosition, distance));
+		//System.out.println(hasDrivenFarEnough(startPosition, distance));
 		while (hasDrivenFarEnough(startPosition, distance) == false) {
+			RobotContainer.m_driveTrain.updateEncoders();
 			double drift = readGyro() / 100;
 			drift = Math.min(drift, 0.1);
 			if (distance > 0) {
 				// a_drive.drive();
-				a_drive.driveByStick(0, AUTO_MAX_X, -drift);  // FORWARD
+				RobotContainer.m_driveTrain.autonomousDrive(-AUTO_MAX_X, drift);  // FORWARD
 			} else {
 				// a_drive.drive();
-				a_drive.driveByStick(0, -AUTO_MAX_X, -drift);  // REVERSE
+				RobotContainer.m_driveTrain.autonomousDrive(AUTO_MAX_X, drift);  // REVERSE
 			}
 			
 			//System.out.println("Gyro Heading: " + drift);
@@ -152,13 +144,13 @@ public class AutoSubsystem extends SubsystemBase {
 	//--------------------------------------
 
 	protected double readGyro() {
-		double angle = a_drive.gyro.getAngle();
+		double angle = RobotContainer.m_driveTrain.gyro.getAngle();
 		return angle;
 	}
 	
 	protected double calcP(double tAngle) {
-		double p = AUTO_MAX_Z * ((1-(Math.abs(readGyro()) / Math.abs(tAngle))) - 0.05);	
-		if (tAngle > 0) {
+		double p = (AUTO_MAX_Z * 1-((Math.abs(tAngle) - Math.abs(RobotContainer.m_driveTrain.gyro.getAngle())) / Math.abs(tAngle)));	
+		if (tAngle < 0) {
 			return p;
 		}
 		
@@ -170,7 +162,7 @@ public class AutoSubsystem extends SubsystemBase {
 	
 	public void stop() {
 
-		// a_drive.drive(0, 0, 0);
+		RobotContainer.m_driveTrain.autonomousDrive(0, 0);
     	//taskDone = true;
     	
     }

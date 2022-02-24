@@ -27,7 +27,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final SolenoidSubsystem m_solenoid = new SolenoidSubsystem(0,1);
+  public final SolenoidSubsystem m_solenoid = new SolenoidSubsystem(0,1);
   private final BallShooterSubsystem m_ballShooter = new BallShooterSubsystem();
   private final BallIndexerSubsystem m_ballIndexer = new BallIndexerSubsystem();
   private final IntakeSubsystem m_ballIntake = new IntakeSubsystem();

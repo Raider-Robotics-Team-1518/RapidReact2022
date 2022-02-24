@@ -5,7 +5,6 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class LimeLight {
-
     private static NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
     //x location of the target
     private static NetworkTableEntry tx = table.getEntry("tx");

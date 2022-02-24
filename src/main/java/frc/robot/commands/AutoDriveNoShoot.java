@@ -14,14 +14,14 @@ public class AutoDriveNoShoot extends CommandBase {
 
   @Override
   public void initialize() {
+    FirePiston.fire();
   }
   @Override
   public void execute() {
-    System.out.println("--> Auto_DriveOffLine::execute()");
+    auto.consolePrint(this.getClass().getSimpleName(), "execute()");
     if (!isFinished()) {
-      System.out.println("--> Auto_DriveOffLine::should be driving");
-      auto.driveforward(distanceToDrive);
-      auto.turnleft(90);
+      auto.consolePrint(this.getClass().getSimpleName(), "Driving...");
+      auto.drivebackward(distanceToDrive);
       auto.stop();
       end(false);
     }
@@ -32,7 +32,7 @@ public class AutoDriveNoShoot extends CommandBase {
   public void end(boolean interrupted) {
     super.end(interrupted);
     isDone = true;
-
+    auto.consolePrint(this.getClass().getSimpleName(), "end()");
   }
 
   // Returns true when the command should end.

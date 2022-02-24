@@ -41,6 +41,10 @@ public class AutoSubsystem extends SubsystemBase {
 
   }
 
+  public void consolePrint(String commandName, String message) {
+	System.out.println("--> "+commandName+"::"+message);
+  }
+
   public double getZ(double angleToRotateTo) {
     if(Math.abs(RobotContainer.m_driveTrain.gyro.getAngle() - angleToRotateTo) > 5.0d) {
       if(RobotContainer.m_driveTrain.gyro.getAngle() - angleToRotateTo < 0) {

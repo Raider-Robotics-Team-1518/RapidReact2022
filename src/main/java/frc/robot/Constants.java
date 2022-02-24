@@ -1,4 +1,4 @@
-package frc.robot.utils;
+package frc.robot;
 
 public class Constants {
     public static final int ShooterMotorID = 15;

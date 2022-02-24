@@ -5,7 +5,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.utils.Constants;
+import frc.robot.Constants;
 
 public class BallIndexerSubsystem extends SubsystemBase {
     public static CANSparkMax indexMotor = new CANSparkMax(Constants.BallIndexerID, MotorType.kBrushless);

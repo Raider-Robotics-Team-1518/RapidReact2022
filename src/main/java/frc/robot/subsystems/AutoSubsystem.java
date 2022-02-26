@@ -3,7 +3,10 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import frc.robot.utils.LimeLight;
+import frc.robot.utils.MathHelper;
 import edu.wpi.first.wpilibj.RobotState;
 
 public class AutoSubsystem extends SubsystemBase {
@@ -39,10 +42,6 @@ public class AutoSubsystem extends SubsystemBase {
   @Override
   public void simulationPeriodic() {
 
-  }
-
-  public void consolePrint(String commandName, String message) {
-	System.out.println("--> "+commandName+"::"+message);
   }
 
   public double getZ(double angleToRotateTo) {
@@ -93,6 +92,26 @@ public class AutoSubsystem extends SubsystemBase {
 	}
 
    
+    public void shootBall(String className) {
+        double motorSpeed = MathHelper.distanceToMotorSpeed(LimeLight.getDistance(), true);
+        double neededRPM = MathHelper.distanceToRPM(LimeLight.getDistance(), true)-250;
+        printShooterInfo(className, LimeLight.getDistance(), motorSpeed, neededRPM);
+        while (BallShooterSubsystem.shooterRPM < neededRPM) {
+            BallShooterSubsystem.shooterMotor.set(motorSpeed);
+        }
+        System.out.println(className + " ---> Shooting ball!");
+        BallIndexerSubsystem.indexMotor.set(Constants.IndexSpeed);
+        System.out.println(className + " ---> Ball shot");
+    }
+
+    private void printShooterInfo(String className, double dist, double motorSpeed, double neededRPM) {
+        System.out.println(className + " ---> ----------------------------");
+        System.out.println(className + " ---> Shooter Info: ");
+        System.out.println(className + " ---> Distance: " + dist);
+        System.out.println(className + " ---> Speed: " + motorSpeed);
+        System.out.println(className + " ---> Needed RPM: " + neededRPM);
+        System.out.println(className + " ---> ----------------------------");
+    }
 
     protected boolean gyroTurn(double degrees) {
 		a_drive.gyro.reset();

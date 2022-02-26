@@ -49,7 +49,8 @@ public class DriveTrain extends SubsystemBase {
 
 
   public void driveByStick(Joystick stick) {
-    m_drive.arcadeDrive(stick.getY()*0.75d, -stick.getZ()*0.5d);
+    double z = Math.abs(stick.getZ()) < deadband ? 0.0d : -stick.getZ()*0.5d;
+    m_drive.arcadeDrive(stick.getY()*0.75d, z);
   }
 
   public void autonomousDrive(final double liveX, final double liveZ) {

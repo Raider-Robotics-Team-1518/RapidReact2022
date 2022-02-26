@@ -4,9 +4,9 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.AutoSubsystem;
 
 public class AutoDriveNoShoot extends CommandBase {
-    private static final double distanceToDrive = 40; // inches
-    private static AutoSubsystem auto;
-    private static boolean isDone = false;
+  private static final double distanceToDrive = 90; // inches
+  private static AutoSubsystem auto;
+  private static boolean isDone = false;
 
   public AutoDriveNoShoot() {
     auto = new AutoSubsystem();
@@ -14,13 +14,13 @@ public class AutoDriveNoShoot extends CommandBase {
 
   @Override
   public void initialize() {
-    FirePiston.fire();
+    DeployIntake.fire();
   }
   @Override
   public void execute() {
-    auto.consolePrint(this.getClass().getSimpleName(), "execute()");
+    System.out.println("AutoDriveNoShoot ---> execute()");
     if (!isFinished()) {
-      auto.consolePrint(this.getClass().getSimpleName(), "Driving...");
+      System.out.println("AutoDriveNoShoot ---> Driving...");
       auto.drivebackward(distanceToDrive);
       auto.stop();
       end(false);
@@ -32,7 +32,7 @@ public class AutoDriveNoShoot extends CommandBase {
   public void end(boolean interrupted) {
     super.end(interrupted);
     isDone = true;
-    auto.consolePrint(this.getClass().getSimpleName(), "end()");
+    System.out.println("AutoDriveNoShoot ---> end()");
   }
 
   // Returns true when the command should end.

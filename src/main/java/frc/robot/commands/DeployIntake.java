@@ -3,18 +3,17 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SolenoidSubsystem;
 
-public class FirePiston extends CommandBase {
+public class DeployIntake extends CommandBase {
     private static SolenoidSubsystem solenoidSubsystem;
 
-    public FirePiston(SolenoidSubsystem solenoidSubsystem) {
-        FirePiston.solenoidSubsystem = solenoidSubsystem;
+    public DeployIntake(SolenoidSubsystem solenoidSubsystem) {
+        DeployIntake.solenoidSubsystem = solenoidSubsystem;
         addRequirements(solenoidSubsystem);
     }
 
     @Override
     public void initialize() {
         fire();
-        //System.out.println("Piston fired");
     }
 
     @Override

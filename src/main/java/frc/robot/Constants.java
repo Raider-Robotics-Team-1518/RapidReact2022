@@ -7,6 +7,8 @@ public class Constants {
 
     public static final int BallIntakerID = 13;
 
+    public static final int ClimbMotorID = 16;
+
     // comp bot
     public static final int RightFrontID = 4;
     public static final int RightRearID = 3;
@@ -23,5 +25,6 @@ public class Constants {
 
     public static final double IntakeSpeed = 0.85d;
     public static final double IndexSpeed = -0.5d;
+    public static final double ClimbSpeed = 0.75d;
     
 }

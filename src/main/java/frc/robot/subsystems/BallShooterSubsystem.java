@@ -2,11 +2,8 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.RobotContainer;
-import frc.robot.utils.Constants;
-import frc.robot.utils.LimeLight;
-
-import java.lang.module.ModuleDescriptor.Requires;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -19,31 +16,33 @@ public class BallShooterSubsystem extends SubsystemBase {
 
   public static boolean override = false;
 
+  public static double shooterRPM = 0.0d;
+
+  private double lastPos1, lastPos2, posDifference;
+
   // distance from hub = hubHeight/tan(limelightAngle)
 
   public static BallShooterSubsystem INST;
   public BallShooterSubsystem() {
     shooterMotorEncoder.setPosition(0);
     setShooterIdleMode(IdleMode.kCoast);
+    posDifference = 0;
+    lastPos1 = lastPos2 = -1;
     INST = this;
+  }
+
+  @Override
+  public void periodic() {
+    doShooterRPM();
   }
 
   public void enableShooterMotor() {
     if(override) {
       return;
     }
-    /*
-    convert shooter rpm to speed:
-    Speed=(0.000198*rpm)+0.00137
-
-    */
-    //double shooterRPM = 804+528*dist+-35.6*dist*dist;
-    //double joyStickThrottle = joystick.getThrottle();
     double shooterThrottle = (-0.5*(RobotContainer.joystick.getThrottle()))+0.5;
     shooterMotor.set(shooterThrottle);
     SmartDashboard.putNumber("ShooterThrottle", shooterThrottle);
-    //SmartDashboard.putNumber("ShooterRPM", shooterMotorEncoder.getVelocity());
-    
   }
 
   public void disableShooterMotor() {
@@ -51,6 +50,22 @@ public class BallShooterSubsystem extends SubsystemBase {
       return;
     }
     shooterMotor.set(0);
+  }
+
+
+  public void doShooterRPM() {
+    // counts per revolution = 42
+    // 60 secs in a min
+    // 42*60=2520
+    if(lastPos1 == -1 && lastPos2 == -1) {
+      lastPos1 = shooterMotorEncoder.getPosition();
+    } else if(lastPos1 != -1 && lastPos2 == -1) {
+      lastPos2 = shooterMotorEncoder.getPosition();
+    } else if(lastPos1 != -1 && lastPos2 != -1) {
+      posDifference = Math.abs(lastPos2-lastPos1)*2520;
+      lastPos1 = lastPos2 = -1;
+    }
+    shooterRPM = posDifference;
   }
 
   public void setShooterIdleMode(IdleMode idleMode) {

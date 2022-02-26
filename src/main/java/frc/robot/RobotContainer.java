@@ -8,13 +8,13 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.AutoDriveNoShoot;
-import frc.robot.commands.FirePiston;
+import frc.robot.commands.DeployIntake;
 import frc.robot.subsystems.BallIndexerSubsystem;
 import frc.robot.subsystems.BallRejectSubsystem;
 import frc.robot.subsystems.BallShooterSubsystem;
+import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.PivoterSubsystem;
 import frc.robot.subsystems.SolenoidSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -30,18 +30,21 @@ public class RobotContainer {
   public final SolenoidSubsystem m_solenoid = new SolenoidSubsystem(0,1);
   private final BallShooterSubsystem m_ballShooter = new BallShooterSubsystem();
   private final BallIndexerSubsystem m_ballIndexer = new BallIndexerSubsystem();
-  private final IntakeSubsystem m_ballIntake = new IntakeSubsystem();
+  private final IntakeSubsystem m_ballIntaker = new IntakeSubsystem();
   private final BallRejectSubsystem m_ballRejecter = new BallRejectSubsystem();
-  private final PivoterSubsystem m_limelightPivoter = new PivoterSubsystem();
+  private final ClimbSubsystem m_climb = new ClimbSubsystem();
   public static DriveTrain m_driveTrain = new DriveTrain();
 
   private final Command m_autoCommand = new AutoDriveNoShoot();
 
   public static Joystick joystick = new Joystick(0);
+  public static XboxController controller = new XboxController(1);
   public JoystickButton shootButton;
   public JoystickButton indexButton;
   public JoystickButton intakeButton;
   public JoystickButton switchPressure;
+  public JoystickButton climbUpButton;
+  public JoystickButton climbDownButton;
 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -58,7 +61,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     switchPressure = new JoystickButton(joystick, 7);
-    switchPressure.whenPressed(new FirePiston(m_solenoid));
+    switchPressure.whenPressed(new DeployIntake(m_solenoid));
 
     shootButton  = new JoystickButton(joystick, 2);
     shootButton.whileHeld(() -> m_ballShooter.enableShooterMotor()).whenReleased(() -> m_ballShooter.disableShooterMotor());
@@ -67,17 +70,12 @@ public class RobotContainer {
     indexButton.whileHeld(() -> m_ballIndexer.enableIndexer()).whenReleased(() -> m_ballIndexer.disableIndexer());
 
     intakeButton = new JoystickButton(joystick, 4);
-    intakeButton.whileHeld(() -> m_ballIntake.enableIntaker()).whenReleased(() -> m_ballIntake.disableIntaker());
+    intakeButton.whileHeld(() -> IntakeSubsystem.enableIntaker()).whenReleased(() -> IntakeSubsystem.disableIntaker());
 
-  }
-
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
-    return m_autoCommand;
+    climbUpButton = new JoystickButton(controller, 8);
+    climbUpButton.whileHeld(() -> m_climb.enableUp()).whenReleased(() -> m_climb.disableClimb());
+    
+    climbDownButton = new JoystickButton(controller, 7);
+    climbUpButton.whileHeld(() -> m_climb.enableDown()).whenReleased(() -> m_climb.disableClimb());
   }
 }

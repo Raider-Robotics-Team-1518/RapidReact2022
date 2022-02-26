@@ -13,8 +13,8 @@ public class DualSolenoid {
     }
 
     public void setup() {
-        this.solenoid1.set(true);
-        this.solenoid2.set(false);
+        this.solenoid1.set(false);
+        this.solenoid2.set(true);
     }
 
     public void toggleSwitch() {

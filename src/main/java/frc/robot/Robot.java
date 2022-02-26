@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.AutoDriveNoShoot;
+import frc.robot.commands.AutoDrivePickupShoot;
+import frc.robot.commands.AutoDriveShoot;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -32,10 +34,12 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    m_robotContainer.m_solenoid.dualSolenoid.setup();
 
-    m_commandChooser.setDefaultOption("No Auto", null);
-    m_commandChooser.addOption("Drive off line", new AutoDriveNoShoot());
+    m_commandChooser.setDefaultOption("None", null);
+    m_commandChooser.addOption("Drive", new AutoDriveNoShoot());
+    m_commandChooser.addOption("Drive and Shoot", new AutoDriveShoot());
+    m_commandChooser.addOption("Drive and Shoot 2", new AutoDrivePickupShoot());
+    m_commandChooser.addOption("Drive n' Shoot, Drive n' Shoot", new AutoDrivePickupShoot());
     SmartDashboard.putData("Auto Commands", m_commandChooser);
   }
 

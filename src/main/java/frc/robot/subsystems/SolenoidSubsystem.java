@@ -9,7 +9,8 @@ public class SolenoidSubsystem extends SubsystemBase {
     
     public SolenoidSubsystem(int channel1, int channel2) {
         dualSolenoid = new DualSolenoid(PneumaticsModuleType.CTREPCM, channel1, channel2);
-    }
+        dualSolenoid.setup();
+    }   
 
     @Override
     public void periodic() {

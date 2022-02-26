@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import frc.robot.utils.MathHelper;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -17,10 +18,7 @@ public class BallShooterSubsystem extends SubsystemBase {
   public static boolean override = false;
 
   public static double shooterRPM = 0.0d;
-
   private double lastPos1, lastPos2, posDifference;
-
-  // distance from hub = hubHeight/tan(limelightAngle)
 
   public static BallShooterSubsystem INST;
   public BallShooterSubsystem() {
@@ -34,6 +32,7 @@ public class BallShooterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     doShooterRPM();
+    SmartDashboard.putNumber("ShooterRPM", shooterRPM);
   }
 
   public void enableShooterMotor() {
@@ -41,7 +40,8 @@ public class BallShooterSubsystem extends SubsystemBase {
       return;
     }
     double shooterThrottle = (-0.5*(RobotContainer.joystick.getThrottle()))+0.5;
-    shooterMotor.set(shooterThrottle);
+    double rpmToSpeed = MathHelper.rpmToSpeed(SmartDashboard.getNumber("DB/Slider 0", shooterThrottle));
+    shooterMotor.set(rpmToSpeed);
     SmartDashboard.putNumber("ShooterThrottle", shooterThrottle);
   }
 

@@ -9,12 +9,11 @@ public class DualSolenoid {
     public DualSolenoid(PneumaticsModuleType moduleType, int channel1, int channel2) {
         this.solenoid1 = new Solenoid(moduleType, channel1);
         this.solenoid2 = new Solenoid(moduleType, channel2);
-        setup();
     }
 
     public void setup() {
-        this.solenoid1.set(false);
-        this.solenoid2.set(true);
+        this.solenoid1.set(true);
+        this.solenoid2.set(false);
     }
 
     public void toggleSwitch() {

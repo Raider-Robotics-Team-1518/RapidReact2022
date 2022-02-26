@@ -7,7 +7,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.AutoDriveNoShoot;
 import frc.robot.commands.DeployIntake;
 import frc.robot.subsystems.BallIndexerSubsystem;
 import frc.robot.subsystems.BallRejectSubsystem;
@@ -16,7 +15,6 @@ import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.SolenoidSubsystem;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
@@ -34,8 +32,6 @@ public class RobotContainer {
   private final BallRejectSubsystem m_ballRejecter = new BallRejectSubsystem();
   private final ClimbSubsystem m_climb = new ClimbSubsystem();
   public static DriveTrain m_driveTrain = new DriveTrain();
-
-  private final Command m_autoCommand = new AutoDriveNoShoot();
 
   public static Joystick joystick = new Joystick(0);
   public static XboxController controller = new XboxController(1);

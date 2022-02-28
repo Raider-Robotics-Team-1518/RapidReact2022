@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.AutoDriveIntakeShoot;
 import frc.robot.commands.AutoDriveNoShoot;
 import frc.robot.commands.AutoDrivePickupShoot;
 import frc.robot.commands.AutoDriveShoot;
@@ -38,9 +39,9 @@ public class Robot extends TimedRobot {
     m_commandChooser.setDefaultOption("None", null);
     m_commandChooser.addOption("Drive", new AutoDriveNoShoot());
     m_commandChooser.addOption("Drive and Shoot", new AutoDriveShoot());
-    m_commandChooser.addOption("Drive and Shoot 2", new AutoDrivePickupShoot());
+    m_commandChooser.addOption("Drive and Shoot 2", new AutoDriveIntakeShoot());
     m_commandChooser.addOption("Drive n' Shoot, Drive n' Shoot", new AutoDrivePickupShoot());
-    SmartDashboard.putData("Auto Commands", m_commandChooser);
+    SmartDashboard.putData("Auto Selector", m_commandChooser);
   }
 
   /**
@@ -56,7 +57,6 @@ public class Robot extends TimedRobot {
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
-    
     CommandScheduler.getInstance().run();
   }
 

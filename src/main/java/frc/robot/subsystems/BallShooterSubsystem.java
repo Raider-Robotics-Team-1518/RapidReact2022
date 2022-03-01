@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import frc.robot.utils.LimeLight;
 import frc.robot.utils.MathHelper;
 
 import com.revrobotics.CANSparkMax;
@@ -40,8 +41,9 @@ public class BallShooterSubsystem extends SubsystemBase {
       return;
     }
     double shooterThrottle = (-0.5*(RobotContainer.joystick.getThrottle()))+0.5;
-    double rpmToSpeed = MathHelper.rpmToSpeed(SmartDashboard.getNumber("DB/Slider 0", shooterThrottle));
-    shooterMotor.set(rpmToSpeed);
+    double motorSpeed = MathHelper.distanceToMotorSpeed(LimeLight.getDistance(), true);
+    shooterMotor.set(motorSpeed);
+    SmartDashboard.putNumber("LimelightSpeed", motorSpeed);
     SmartDashboard.putNumber("ShooterThrottle", shooterThrottle);
   }
 

@@ -10,6 +10,8 @@ import edu.wpi.first.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DeployIntake;
 import frc.robot.subsystems.BallIndexerSubsystem;
 import frc.robot.subsystems.BallRejectSubsystem;
@@ -18,6 +20,11 @@ import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.SolenoidSubsystem;
+import frc.robot.commands.AutoDriveIntakeShoot;
+import frc.robot.commands.AutoDriveNoShoot;
+import frc.robot.commands.AutoDrivePickupShoot;
+import frc.robot.commands.AutoDriveShoot;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
@@ -27,6 +34,8 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+  public final SendableChooser<Command> m_commandChooser = new SendableChooser<>();
+
   // The robot's subsystems and commands are defined here...
   public final SolenoidSubsystem m_solenoid = new SolenoidSubsystem(0,1);
   private final BallShooterSubsystem m_ballShooter = new BallShooterSubsystem();
@@ -40,6 +49,7 @@ public class RobotContainer {
   public static Joystick joystick = new Joystick(0);
   public static XboxController controller = new XboxController(1);
   public JoystickButton shootButton;
+  public JoystickButton directionButton;
   public JoystickButton indexButton;
   public JoystickButton intakeController;
   public JoystickButton backfeedButton;
@@ -53,6 +63,14 @@ public class RobotContainer {
   public RobotContainer() {
     usbCamera = CameraServer.startAutomaticCapture();
     usbCamera.setVideoMode(PixelFormat.kMJPEG, 160, 120, 15);
+
+    m_commandChooser.setDefaultOption("None", null);
+    m_commandChooser.addOption("Drive", new AutoDriveNoShoot());
+    m_commandChooser.addOption("Drive and Shoot", new AutoDriveShoot());
+    m_commandChooser.addOption("Drive and Shoot 2", new AutoDriveIntakeShoot());
+    m_commandChooser.addOption("Drive n' Shoot, Drive n' Shoot", new AutoDrivePickupShoot());
+    SmartDashboard.putData("Autonomous Options", m_commandChooser);
+
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -69,6 +87,9 @@ public class RobotContainer {
 
     switchPressure = new JoystickButton(controller, 7);
     switchPressure.whenPressed(new DeployIntake(m_solenoid));
+
+    directionButton = new JoystickButton(joystick, 2);
+    directionButton.whenPressed(() -> m_driveTrain.switchDriveDirection());
 
     shootButton  = new JoystickButton(controller, 8);
     shootButton.whileHeld(() -> m_ballShooter.enableShooterMotor()).whenReleased(() -> m_ballShooter.disableShooterMotor());

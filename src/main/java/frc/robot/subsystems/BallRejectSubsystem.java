@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class BallRejectSubsystem extends SubsystemBase {
     String teamColor;
@@ -24,7 +25,7 @@ public class BallRejectSubsystem extends SubsystemBase {
 
         if(!getCurrentColorBall().equalsIgnoreCase(teamColor) && !getCurrentColorBall().equalsIgnoreCase("None")) {
             BallShooterSubsystem.override = BallIndexerSubsystem.override = true;
-            BallShooterSubsystem.shooterMotor.set(0.2d);
+            BallShooterSubsystem.shooterMotor.set(Constants.RejectSpeed);
             BallIndexerSubsystem.indexMotor.set(-1d);
         } else {
             if(BallShooterSubsystem.override) {

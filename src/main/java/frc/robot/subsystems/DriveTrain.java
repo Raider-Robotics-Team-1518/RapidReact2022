@@ -23,6 +23,8 @@ public class DriveTrain extends SubsystemBase {
   private final static WPI_TalonFX leftRear = new WPI_TalonFX(Constants.LeftRearID);
   private final MotorControllerGroup leftMotorGroup = new MotorControllerGroup(leftFront, leftRear);
   private final DifferentialDrive m_drive;
+
+  private boolean reversed = false;
  
   public double m_leftEncoder = 0;
   public double m_rightEncoder = 0;
@@ -50,7 +52,13 @@ public class DriveTrain extends SubsystemBase {
   public void driveByStick(Joystick stick) {
     // change rotational sensitivity based on if we are driving forward/backward
    // double z = Math.abs(stick.getY()) > 0.2d ?  -stick.getZ()*0.420d : -stick.getZ()*0.5d;
-    m_drive.arcadeDrive(stick.getY(), -stick.getZ()*0.5d);
+   double x = stick.getY();
+   double z = -stick.getZ()*0.5d;
+    if(reversed) {
+      x = -x;
+      z = z;
+    }
+    m_drive.arcadeDrive(x, z);
   }
 
   public void driveByStick(double x, double z) {
@@ -59,6 +67,10 @@ public class DriveTrain extends SubsystemBase {
 
   public void autonomousDrive(final double liveX, final double liveZ) {
     m_drive.arcadeDrive(liveX, liveZ);
+  }
+
+  public void switchDriveDirection() {
+    reversed = !reversed;
   }
 
   public static WPI_TalonFX getMotor(Motor m) {

@@ -41,7 +41,7 @@ public class Robot extends TimedRobot {
     m_commandChooser.addOption("Drive and Shoot", new AutoDriveShoot());
     m_commandChooser.addOption("Drive and Shoot 2", new AutoDriveIntakeShoot());
     m_commandChooser.addOption("Drive n' Shoot, Drive n' Shoot", new AutoDrivePickupShoot());
-    SmartDashboard.putData("Auto Selector", m_commandChooser);
+    SmartDashboard.putData("Autonomous Options", m_commandChooser);
   }
 
   /**

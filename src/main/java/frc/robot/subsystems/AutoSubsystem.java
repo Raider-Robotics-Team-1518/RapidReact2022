@@ -23,9 +23,6 @@ public class AutoSubsystem extends SubsystemBase {
   double targetPulseCount = 0;
   double targetPosition = 0;
   double drivePower = 0;
-  double AUTO_MAX_Y = 0.35;  // Maximum power for strafe
-  double AUTO_MAX_X = 0.35;  // Maximum power for forward/back
-  double AUTO_MAX_Z = 0.40;  // Maximum power to rotate
 
   private DriveTrain a_drive = RobotContainer.m_driveTrain;
 
@@ -134,10 +131,10 @@ public class AutoSubsystem extends SubsystemBase {
 			drift = Math.min(drift, 0.1);
 			if (distance > 0) {
 				// a_drive.drive();
-				RobotContainer.m_driveTrain.autonomousDrive(-AUTO_MAX_X, drift);  // FORWARD
+				RobotContainer.m_driveTrain.autonomousDrive(-Constants.AUTO_MAX_X, drift);  // FORWARD
 			} else {
 				// a_drive.drive();
-				RobotContainer.m_driveTrain.autonomousDrive(AUTO_MAX_X, drift);  // REVERSE
+				RobotContainer.m_driveTrain.autonomousDrive(Constants.AUTO_MAX_X, drift);  // REVERSE
 			}
 			
 			//System.out.println("Gyro Heading: " + drift);
@@ -172,7 +169,7 @@ public class AutoSubsystem extends SubsystemBase {
 	}
 	
 	protected double calcP(double tAngle) {
-		double p = (AUTO_MAX_Z * 1-((Math.abs(tAngle) - Math.abs(RobotContainer.m_driveTrain.gyro.getAngle())) / Math.abs(tAngle)));	
+		double p = (Constants.AUTO_MAX_Z * 1-((Math.abs(tAngle) - Math.abs(RobotContainer.m_driveTrain.gyro.getAngle())) / Math.abs(tAngle)));	
 		if (tAngle < 0) {
 			return p;
 		}

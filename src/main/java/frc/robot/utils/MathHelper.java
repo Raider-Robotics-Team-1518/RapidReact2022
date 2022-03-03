@@ -3,10 +3,11 @@ package frc.robot.utils;
 public class MathHelper {
 
     public static double distanceToRPM(double distance, boolean upperHub) {
+        double inchesToFeet = distance/12;
         if(upperHub) {
-            return (5045d+-274d*(distance)+14.9*Math.pow(distance, 2));
+            return (5045d+-274d*(inchesToFeet)+14.9*Math.pow(inchesToFeet, 2));
         } else {
-            return (1224+251*(distance)+-5.15*Math.pow(distance, 2));
+            return (1224+251*(inchesToFeet)+-5.15*Math.pow(inchesToFeet, 2));
         }
     }
 

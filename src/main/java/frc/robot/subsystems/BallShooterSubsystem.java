@@ -33,18 +33,26 @@ public class BallShooterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     doShooterRPM();
-    SmartDashboard.putNumber("ShooterRPM", shooterRPM);
+    doShooterDisplay();
   }
 
   public void enableShooterMotor() {
     if(override) {
       return;
     }
-    double shooterThrottle = (-0.5*(RobotContainer.joystick.getThrottle()))+0.5;
+
+    // auto correct to center to target
+    if(LimeLight.isTargetAvalible()) {
+      if(LimeLight.getX() > Constants.CameraDeadZone) {
+        RobotContainer.m_driveTrain.driveByStick(0, -((LimeLight.getX()/12)*Constants.AUTO_MAX_Z)+Constants.AUTO_MIN_Z);
+      } else if (LimeLight.getX() < -Constants.CameraDeadZone) {
+        RobotContainer.m_driveTrain.driveByStick(0, -((LimeLight.getX()/12)*Constants.AUTO_MAX_Z)+Constants.AUTO_MIN_Z);
+      }
+    }
+
+    //double shooterThrottle = (-0.5*(RobotContainer.joystick.getThrottle()))+0.5;
     double motorSpeed = MathHelper.distanceToMotorSpeed(LimeLight.getDistance(), true);
     shooterMotor.set(motorSpeed);
-    SmartDashboard.putNumber("LimelightSpeed", motorSpeed);
-    SmartDashboard.putNumber("ShooterThrottle", shooterThrottle);
   }
 
   public void disableShooterMotor() {
@@ -52,6 +60,14 @@ public class BallShooterSubsystem extends SubsystemBase {
       return;
     }
     shooterMotor.set(0);
+  }
+
+  public void doShooterDisplay() {
+    double motorSpeed = MathHelper.distanceToMotorSpeed(LimeLight.getDistance(), true);
+    SmartDashboard.putNumber("AutoThrottle", motorSpeed);
+    SmartDashboard.putNumber("ShooterRPM", shooterRPM);
+    SmartDashboard.putNumber("TargetDistance", LimeLight.getDistance());
+    SmartDashboard.putBoolean("Target Locked", LimeLight.isTargetAvalible());
   }
 
 

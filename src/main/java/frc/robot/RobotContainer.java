@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -32,11 +35,14 @@ public class RobotContainer {
   private final BallRejectSubsystem m_ballRejecter = new BallRejectSubsystem();
   private final ClimbSubsystem m_climb = new ClimbSubsystem();
   public static DriveTrain m_driveTrain = new DriveTrain();
+  public static UsbCamera usbCamera;
 
   public static Joystick joystick = new Joystick(0);
   public static XboxController controller = new XboxController(1);
   public JoystickButton shootButton;
   public JoystickButton indexButton;
+  public JoystickButton intakeController;
+  public JoystickButton backfeedButton;
   public JoystickButton intakeButton;
   public JoystickButton switchPressure;
   public JoystickButton climbUpButton;
@@ -45,6 +51,8 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    usbCamera = CameraServer.startAutomaticCapture();
+    usbCamera.setVideoMode(PixelFormat.kMJPEG, 160, 120, 15);
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -56,22 +64,31 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    switchPressure = new JoystickButton(joystick, 7);
+    switchPressure = new JoystickButton(joystick, 3);
     switchPressure.whenPressed(new DeployIntake(m_solenoid));
 
-    shootButton  = new JoystickButton(joystick, 2);
+    switchPressure = new JoystickButton(controller, 7);
+    switchPressure.whenPressed(new DeployIntake(m_solenoid));
+
+    shootButton  = new JoystickButton(controller, 8);
     shootButton.whileHeld(() -> m_ballShooter.enableShooterMotor()).whenReleased(() -> m_ballShooter.disableShooterMotor());
 
-    indexButton = new JoystickButton(joystick, 1);
+    indexButton = new JoystickButton(controller, 2);
     indexButton.whileHeld(() -> m_ballIndexer.enableIndexer()).whenReleased(() -> m_ballIndexer.disableIndexer());
 
-    intakeButton = new JoystickButton(joystick, 4);
+    backfeedButton = new JoystickButton(controller, 1);
+    backfeedButton.whileHeld(() -> m_ballIndexer.backfeedIndexer()).whenReleased(() -> m_ballIndexer.disableIndexer());
+
+    intakeButton = new JoystickButton(joystick, 1);
     intakeButton.whileHeld(() -> IntakeSubsystem.enableIntaker()).whenReleased(() -> IntakeSubsystem.disableIntaker());
 
-    climbUpButton = new JoystickButton(controller, 8);
+    intakeController = new JoystickButton(controller, 3);
+    intakeController.whileHeld(() -> IntakeSubsystem.enableIntaker()).whenReleased(() -> IntakeSubsystem.disableIntaker());
+    
+    climbUpButton = new JoystickButton(controller, 5);
     climbUpButton.whileHeld(() -> m_climb.enableUp()).whenReleased(() -> m_climb.disableClimb());
     
-    climbDownButton = new JoystickButton(controller, 7);
+    climbDownButton = new JoystickButton(controller, 6);
     climbUpButton.whileHeld(() -> m_climb.enableDown()).whenReleased(() -> m_climb.disableClimb());
   }
 }

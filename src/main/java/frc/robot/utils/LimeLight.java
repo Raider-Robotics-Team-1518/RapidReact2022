@@ -15,10 +15,10 @@ public class LimeLight {
     //does the limelight have a target
     private static NetworkTableEntry tv = table.getEntry("tv");
 
-    private static double limelightMountAngleDegrees = 20.0;
+    private static double limelightMountAngleDegrees = 13.0;
 
     // distance from the center of the Limelight lens to the floor
-    private static double limelightHeightInches = 23.0;
+    private static double limelightHeightInches = 12.5;
     
     public static double getX(){
         return tx.getDouble(0.0);
@@ -34,7 +34,6 @@ public class LimeLight {
 
         double angleToGoalDegrees = limelightMountAngleDegrees + getY();
         double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
-
         double distanceFromLimelightToGoalInches = (heightOfGoal - limelightHeightInches)/Math.tan(angleToGoalRadians);
         return distanceFromLimelightToGoalInches;
     }
@@ -44,7 +43,7 @@ public class LimeLight {
     }
     
     public static boolean isTargetAvalible(){
-        return tv.getBoolean(false);
+        return tv.getDouble(0.0d) == 1.0d;
     }
 }
     

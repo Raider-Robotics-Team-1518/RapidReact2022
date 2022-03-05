@@ -19,6 +19,7 @@ import frc.robot.subsystems.BallShooterSubsystem;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LightsSubsystem;
 import frc.robot.subsystems.SolenoidSubsystem;
 import frc.robot.commands.AutoDriveIntakeShoot;
 import frc.robot.commands.AutoDriveNoShoot;
@@ -37,13 +38,14 @@ public class RobotContainer {
   public final SendableChooser<Command> m_commandChooser = new SendableChooser<>();
 
   // The robot's subsystems and commands are defined here...
-  public final SolenoidSubsystem m_solenoid = new SolenoidSubsystem(0,1);
+  public static DriveTrain m_driveTrain = new DriveTrain();
+  public final SolenoidSubsystem m_intakeSolenoid = new SolenoidSubsystem(0,1);
   private final BallShooterSubsystem m_ballShooter = new BallShooterSubsystem();
   private final BallIndexerSubsystem m_ballIndexer = new BallIndexerSubsystem();
   private final IntakeSubsystem m_ballIntaker = new IntakeSubsystem();
   private final BallRejectSubsystem m_ballRejecter = new BallRejectSubsystem();
   private final ClimbSubsystem m_climb = new ClimbSubsystem();
-  public static DriveTrain m_driveTrain = new DriveTrain();
+  public static LightsSubsystem m_blinkies = new LightsSubsystem();
   public static UsbCamera usbCamera;
 
   public static Joystick joystick = new Joystick(0);
@@ -83,10 +85,10 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     switchPressure = new JoystickButton(joystick, 3);
-    switchPressure.whenPressed(new DeployIntake(m_solenoid));
+    switchPressure.whenPressed(new DeployIntake(m_intakeSolenoid));
 
     switchPressure = new JoystickButton(controller, 7);
-    switchPressure.whenPressed(new DeployIntake(m_solenoid));
+    switchPressure.whenPressed(new DeployIntake(m_intakeSolenoid));
 
     directionButton = new JoystickButton(joystick, 2);
     directionButton.whenPressed(() -> m_driveTrain.switchDriveDirection());

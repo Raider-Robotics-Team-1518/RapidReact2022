@@ -20,6 +20,8 @@ public class BallShooterSubsystem extends SubsystemBase {
 
   public static double shooterRPM = 0.0d;
   private double autoThrottle = 0.0d;
+
+  public static boolean pivoting = false;
   
   private double lastPos1, lastPos2, posDifference;
 
@@ -46,14 +48,12 @@ public class BallShooterSubsystem extends SubsystemBase {
     // auto correct to center to target
     if(LimeLight.isTargetAvalible()) {
       double zRot = Math.max(-((LimeLight.getX()/Constants.CameraDerivative)), -Constants.AUTO_MIN_Z);
-      if(LimeLight.getX() > Constants.CameraDeadZone) {
-        RobotContainer.m_driveTrain.driveByStick(0, zRot);
-      } else if(LimeLight.getX() < -Constants.CameraDeadZone) {
+      pivoting = (LimeLight.getX() > Constants.CameraDeadZone) || (LimeLight.getX() < -Constants.CameraDeadZone);
+      if(pivoting) {
         RobotContainer.m_driveTrain.driveByStick(0, zRot);
       }
     }
 
-    //double shooterThrottle = (-0.5*(RobotContainer.joystick.getThrottle()))+0.5;
     double motorSpeed = MathHelper.distanceToMotorSpeed(LimeLight.getDistance(), true);
     if(motorSpeed < 1.1d) {
       autoThrottle = motorSpeed;

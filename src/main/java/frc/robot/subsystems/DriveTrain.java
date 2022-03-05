@@ -47,10 +47,10 @@ public class DriveTrain extends SubsystemBase {
   public void simulationPeriodic() {
   }
 
-
   public void driveByStick(Joystick stick) {
-    // change rotational sensitivity based on if we are driving forward/backward
-   // double z = Math.abs(stick.getY()) > 0.2d ?  -stick.getZ()*0.420d : -stick.getZ()*0.5d;
+    if(BallShooterSubsystem.pivoting) {
+      return;
+    }
    double x = stick.getY();
    double z = -stick.getZ()*0.5d;
     m_drive.arcadeDrive(reversed ? -x : x, z);

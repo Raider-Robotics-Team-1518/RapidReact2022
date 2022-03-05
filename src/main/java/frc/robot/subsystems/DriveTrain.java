@@ -22,7 +22,7 @@ public class DriveTrain extends SubsystemBase {
   private final static WPI_TalonFX leftFront = new WPI_TalonFX(Constants.LeftFrontID);
   private final static WPI_TalonFX leftRear = new WPI_TalonFX(Constants.LeftRearID);
   private final MotorControllerGroup leftMotorGroup = new MotorControllerGroup(leftFront, leftRear);
-  private final DifferentialDrive m_drive;
+  private final DifferentialDrive m_drive = new DifferentialDrive(leftMotorGroup, rightMotorGroup);
 
   private boolean reversed = false;
  
@@ -31,7 +31,6 @@ public class DriveTrain extends SubsystemBase {
   public AHRS gyro;
 
   public DriveTrain() {
-    m_drive = new DifferentialDrive(leftMotorGroup, rightMotorGroup);
     leftMotorGroup.setInverted(true);
     gyro = new AHRS(SerialPort.Port.kUSB);
     gyro.reset();
@@ -54,11 +53,7 @@ public class DriveTrain extends SubsystemBase {
    // double z = Math.abs(stick.getY()) > 0.2d ?  -stick.getZ()*0.420d : -stick.getZ()*0.5d;
    double x = stick.getY();
    double z = -stick.getZ()*0.5d;
-    if(reversed) {
-      x = -x;
-      z = z;
-    }
-    m_drive.arcadeDrive(x, z);
+    m_drive.arcadeDrive(reversed ? -x : x, z);
   }
 
   public void driveByStick(double x, double z) {

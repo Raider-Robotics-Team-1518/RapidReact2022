@@ -19,6 +19,7 @@ public class BallShooterSubsystem extends SubsystemBase {
   public static boolean override = false;
 
   public static double shooterRPM = 0.0d;
+  public static double desiredRPM = 0.0d;
   private double autoThrottle = 0.0d;
 
   public static boolean pivoting = false;
@@ -40,6 +41,10 @@ public class BallShooterSubsystem extends SubsystemBase {
     doShooterDisplay();
   }
 
+  public boolean isPivoting() {
+    return (!override && LimeLight.isTargetAvalible() && shooterMotor.get() > 0.1d && ((LimeLight.getX() > Constants.CameraDeadZone) || (LimeLight.getX() < -Constants.CameraDeadZone)));
+  }
+
   public void enableShooterMotor() {
     if(override) {
       return;
@@ -49,12 +54,13 @@ public class BallShooterSubsystem extends SubsystemBase {
     if(LimeLight.isTargetAvalible()) {
       double zRot = Math.max(-((LimeLight.getX()/Constants.CameraDerivative)), -Constants.AUTO_MIN_Z);
       pivoting = (LimeLight.getX() > Constants.CameraDeadZone) || (LimeLight.getX() < -Constants.CameraDeadZone);
-      if(pivoting) {
+      if((LimeLight.getX() > Constants.CameraDeadZone) || (LimeLight.getX() < -Constants.CameraDeadZone)) {
         RobotContainer.m_driveTrain.driveByStick(0, zRot);
       }
     }
 
     double motorSpeed = MathHelper.distanceToMotorSpeed(LimeLight.getDistance(), true);
+    desiredRPM = MathHelper.distanceToRPM(LimeLight.getDistance(), true);
     if(motorSpeed < 1.1d) {
       autoThrottle = motorSpeed;
     }
@@ -75,6 +81,10 @@ public class BallShooterSubsystem extends SubsystemBase {
     SmartDashboard.putBoolean("Target Locked", LimeLight.isTargetAvalible());
   }
 
+  public static boolean upToRPM() {
+    return shooterRPM > desiredRPM-50;
+  }
+
 
   public void doShooterRPM() {
     // counts per revolution = 42
@@ -88,7 +98,9 @@ public class BallShooterSubsystem extends SubsystemBase {
       posDifference = Math.abs(lastPos2-lastPos1)*2520;
       lastPos1 = lastPos2 = -1;
     }
+    if(posDifference < 200) return;
     shooterRPM = posDifference;
+    SmartDashboard.putNumber("Shooter Velocity", shooterMotor.getEncoder().getVelocity());
   }
 
   public void setShooterIdleMode(IdleMode idleMode) {

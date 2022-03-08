@@ -30,7 +30,7 @@ public class AutoDriveIntakeShoot extends CommandBase{
             System.out.println("AutoDriveIntakeShoot ---> Intake engaged");
             IntakeSubsystem.enableIntaker();
             System.out.println("AutoDriveIntakeShoot ---> Driving...");
-            auto.drivebackward(distanceToDrive);
+            auto.driveforward(distanceToDrive);
             auto.stop();
             if(LimeLight.isTargetAvalible()) {
                 System.out.println("AutoDriveIntakeShoot ---> Hub found!");

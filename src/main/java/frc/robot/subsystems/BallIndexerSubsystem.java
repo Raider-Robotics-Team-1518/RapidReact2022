@@ -17,7 +17,7 @@ public class BallIndexerSubsystem extends SubsystemBase {
     }
 
     public void enableIndexer() {
-        if(override) {
+        if(override || !BallShooterSubsystem.upToRPM()) {
             return;
         }
         indexMotor.set(Constants.IndexSpeed);

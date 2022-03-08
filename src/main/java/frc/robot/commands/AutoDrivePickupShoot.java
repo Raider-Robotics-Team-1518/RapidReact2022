@@ -29,7 +29,7 @@ public class AutoDrivePickupShoot extends CommandBase {
         System.out.println("AutoDrivePickupShoot ---> execute()");
         if (!isFinished()) {
             System.out.println("AutoDrivePickupShoot ---> Driving...");
-            auto.drivebackward(distanceToDrive);
+            auto.driveforward(distanceToDrive);
             auto.stop();
             if(LimeLight.isTargetAvalible()) {
                 System.out.println("AutoDrivePickupShoot ---> Hub found!");
@@ -37,7 +37,7 @@ public class AutoDrivePickupShoot extends CommandBase {
                 shotFirstBall = true;
                 if(shotFirstBall) {
                     IntakeSubsystem.enableIntaker();
-                    auto.drivebackward(25); // inches
+                    auto.driveforward(25); // inches
                     auto.stop();
                     while(BallRejectSubsystem.getCurrentColorBall().equalsIgnoreCase("None")) {
                         IntakeSubsystem.enableIntaker();

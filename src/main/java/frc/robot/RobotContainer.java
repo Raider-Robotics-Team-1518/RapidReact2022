@@ -44,7 +44,7 @@ public class RobotContainer {
   private final BallIndexerSubsystem m_ballIndexer = new BallIndexerSubsystem();
   private final IntakeSubsystem m_ballIntaker = new IntakeSubsystem();
   private final BallRejectSubsystem m_ballRejecter = new BallRejectSubsystem();
-  private final ClimbSubsystem m_climb = new ClimbSubsystem();
+  //private final ClimbSubsystem m_climb = new ClimbSubsystem();
   public static LightsSubsystem m_blinkies = new LightsSubsystem();
   public static UsbCamera usbCamera;
 
@@ -67,9 +67,9 @@ public class RobotContainer {
     usbCamera.setVideoMode(PixelFormat.kMJPEG, 160, 120, 15);
 
     m_commandChooser.setDefaultOption("None", null);
-    m_commandChooser.addOption("Drive", new AutoDriveNoShoot());
-    m_commandChooser.addOption("Drive and Shoot", new AutoDriveShoot());
-    m_commandChooser.addOption("Drive and Shoot 2", new AutoDriveIntakeShoot());
+    m_commandChooser.addOption("Drive only", new AutoDriveNoShoot());
+    m_commandChooser.addOption("Drive and Shoot 1 ball", new AutoDriveShoot());
+    m_commandChooser.addOption("Drive and Shoot 2 balls", new AutoDriveIntakeShoot());
     m_commandChooser.addOption("Drive n' Shoot, Drive n' Shoot", new AutoDrivePickupShoot());
     SmartDashboard.putData("Autonomous Options", m_commandChooser);
 
@@ -109,9 +109,9 @@ public class RobotContainer {
     intakeController.whileHeld(() -> IntakeSubsystem.enableIntaker()).whenReleased(() -> IntakeSubsystem.disableIntaker());
     
     climbUpButton = new JoystickButton(controller, 5);
-    climbUpButton.whileHeld(() -> m_climb.enableUp()).whenReleased(() -> m_climb.disableClimb());
+    climbUpButton.whileHeld(() -> ClimbSubsystem.enableClimb(true)).whenReleased(() -> ClimbSubsystem.disableClimb());
     
     climbDownButton = new JoystickButton(controller, 6);
-    climbUpButton.whileHeld(() -> m_climb.enableDown()).whenReleased(() -> m_climb.disableClimb());
+    climbDownButton.whileHeld(() -> ClimbSubsystem.enableClimb(false)).whenReleased(() -> ClimbSubsystem.disableClimb());
   }
 }

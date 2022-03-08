@@ -75,7 +75,7 @@ public class AutoSubsystem extends SubsystemBase {
 				}
 			}
 			else { // Driving REVERSE
-				if (currentPosition <= targetPosition) {
+				if (-currentPosition <= targetPosition) {
 					return true;
 				}
 				else {
@@ -112,11 +112,15 @@ public class AutoSubsystem extends SubsystemBase {
 
     protected boolean gyroTurn(double degrees) {
 		a_drive.gyro.reset();
-		while ((RobotState.isAutonomous() == true) && (Math.abs(readGyro()) < Math.abs(degrees))) {
+		while ((RobotState.isAutonomous() == true) && outsideDeadzone(degrees)) {
 			RobotContainer.m_driveTrain.autonomousDrive(0, calcP(degrees));
 		}
 		stop();
 		return true;
+	}
+
+	private boolean outsideDeadzone(double deg) {
+		return (readGyro() < (deg-Constants.GYRO_DEADZONE)) || (readGyro() > (deg+Constants.GYRO_DEADZONE));
 	}
     
 	protected boolean gyroDrive(double distance) {
@@ -169,14 +173,7 @@ public class AutoSubsystem extends SubsystemBase {
 	}
 	
 	protected double calcP(double tAngle) {
-		double p = (Constants.AUTO_MAX_Z * 1-((Math.abs(tAngle) - Math.abs(RobotContainer.m_driveTrain.gyro.getAngle())) / Math.abs(tAngle)));	
-		if (tAngle < 0) {
-			return p;
-		}
-		
-		else {
-			return (p * -1);
-		}
+		return tAngle > readGyro() ? Constants.AUTO_MAX_Z : -Constants.AUTO_MAX_Z;
 		
 	}
 	

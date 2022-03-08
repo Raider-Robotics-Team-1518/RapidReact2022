@@ -19,13 +19,12 @@ public class AutoDriveShoot extends CommandBase{
     public void initialize() {
         DeployIntake.fire();
     }
-
     @Override
     public void execute() {
         System.out.println("AutoDriveShoot ---> execute()");
         if (!isFinished()) {
             System.out.println("AutoDriveShoot ---> Driving...");
-            auto.drivebackward(distanceToDrive);
+            auto.driveforward(distanceToDrive);
             auto.stop();
             if(LimeLight.isTargetAvalible()) {
                 System.out.println("AutoDriveShoot ---> Hub found!");

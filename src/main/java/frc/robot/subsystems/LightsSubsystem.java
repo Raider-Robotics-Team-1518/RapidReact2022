@@ -28,6 +28,15 @@ public class LightsSubsystem extends SubsystemBase {
           setLEDState(LEDState.RED);
           return;
       }
+    } else if(BallShooterSubsystem.shooterMotor.get() > 0.1d) {
+      switch(BallRejectSubsystem.teamColor.toLowerCase()) {
+        case "Blue":
+          setLEDState(LEDState.BLUE_WITH_RED_STRIPE);
+          return;
+        case "Red":
+          setLEDState(LEDState.RED_WITH_BLUE_STRIPE);
+          return;
+      }
     } else {
       switch(BallRejectSubsystem.teamColor.toLowerCase()) {
         case "Blue":
@@ -53,7 +62,9 @@ public class LightsSubsystem extends SubsystemBase {
       BLUE(false, false, true),
       RED(false, true, false),
       PULSE_BLUE(false, true, true),
-      PULSE_RED(true, false, true);
+      PULSE_RED(true, false, false),
+      RED_WITH_BLUE_STRIPE(true, false, true),
+      BLUE_WITH_RED_STRIPE(true, true, false);
   
       private final boolean do1, do2, do3;
       private LEDState(boolean do1, boolean do2, boolean do3) {

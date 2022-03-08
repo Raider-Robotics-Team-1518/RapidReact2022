@@ -5,10 +5,12 @@ import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.SerialPort;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -40,6 +42,9 @@ public class DriveTrain extends SubsystemBase {
 
   @Override
   public void periodic() {
+    if(RobotState.isTeleop()) {
+     driveByStick(RobotContainer.joystick);
+    }
     updateEncoders();
   }
 
@@ -48,11 +53,11 @@ public class DriveTrain extends SubsystemBase {
   }
 
   public void driveByStick(Joystick stick) {
-    if(BallShooterSubsystem.pivoting) {
+    /*if(BallShooterSubsystem.INST.isPivoting()) {
       return;
-    }
-   double x = stick.getY();
-   double z = -stick.getZ()*0.5d;
+    }*/
+    double x = stick.getY();
+    double z = -stick.getZ()*0.65d;
     m_drive.arcadeDrive(reversed ? -x : x, z);
   }
 
@@ -112,7 +117,7 @@ public class DriveTrain extends SubsystemBase {
   }
 
   public double getEncoderAverage(){
-    return (Math.abs(leftFront.getSelectedSensorPosition()) + Math.abs(rightFront.getSelectedSensorPosition())) / 2;
+    return ((Math.abs(leftFront.getSelectedSensorPosition()) + Math.abs(rightFront.getSelectedSensorPosition())) / 2);
   }
 
   public void setNeutralMode(NeutralMode mode){
@@ -126,10 +131,10 @@ public class DriveTrain extends SubsystemBase {
     //m_leftEncoder = leftFront.getSelectedSensorPosition();
     //m_rightEncoder = rightFront.getSelectedSensorPosition();
     SmartDashboard.putNumber("ENC_Average", getEncoderAverage());
-    SmartDashboard.putNumber("ENC_RightFront", rightFront.getSelectedSensorPosition());
-    SmartDashboard.putNumber("ENC_LeftFront", leftFront.getSelectedSensorPosition());
-    SmartDashboard.putNumber("ENC_RightRear", rightRear.getSelectedSensorPosition());
-    SmartDashboard.putNumber("ENC_LeftRear", leftRear.getSelectedSensorPosition());
+    //SmartDashboard.putNumber("ENC_RightFront", rightFront.getSelectedSensorPosition());
+    //SmartDashboard.putNumber("ENC_LeftFront", leftFront.getSelectedSensorPosition());
+    //SmartDashboard.putNumber("ENC_RightRear", rightRear.getSelectedSensorPosition());
+    //SmartDashboard.putNumber("ENC_LeftRear", leftRear.getSelectedSensorPosition());
 
   }
 

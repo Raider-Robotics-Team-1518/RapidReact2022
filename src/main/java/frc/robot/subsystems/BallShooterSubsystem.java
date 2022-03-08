@@ -61,7 +61,7 @@ public class BallShooterSubsystem extends SubsystemBase {
 
     double motorSpeed = MathHelper.distanceToMotorSpeed(LimeLight.getDistance(), true);
     desiredRPM = MathHelper.distanceToRPM(LimeLight.getDistance(), true);
-    if(motorSpeed < 1.1d) {
+    if(motorSpeed < 1.1d && LimeLight.getDistance() < 245) {
       autoThrottle = motorSpeed;
     }
     shooterMotor.set(autoThrottle);

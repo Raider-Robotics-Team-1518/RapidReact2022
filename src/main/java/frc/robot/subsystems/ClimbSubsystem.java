@@ -16,6 +16,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
     public static void enableClimb(boolean up) {
         climbMotor.set(up ? Constants.ClimbSpeed : -Constants.ClimbSpeed);
+        climbMotor.setIdleMode(IdleMode.kBrake);
     }
 
     public static void disableClimb() {

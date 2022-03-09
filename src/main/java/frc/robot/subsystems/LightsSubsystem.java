@@ -6,9 +6,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LightsSubsystem extends SubsystemBase {
   public LEDState lightState = LEDState.DEFAULT;
-  public final DigitalOutput dOutput1 = new DigitalOutput(2);
-  public final DigitalOutput dOutput2 = new DigitalOutput(3);
-  public final DigitalOutput dOutput3 = new DigitalOutput(4);
+  public final DigitalOutput dOutput1 = new DigitalOutput(1);
+  public final DigitalOutput dOutput2 = new DigitalOutput(2);
+  public final DigitalOutput dOutput3 = new DigitalOutput(3);
+  public final DigitalOutput dOutput4 = new DigitalOutput(4);
 
   public LightsSubsystem() {
   }
@@ -58,7 +59,7 @@ public class LightsSubsystem extends SubsystemBase {
 
 
   public enum LEDState {
-      DEFAULT(false, false, false),
+      DEFAULT(true, false, true), //(false, false, false),
       BLUE(false, false, true),
       RED(false, true, false),
       PULSE_BLUE(false, true, true),

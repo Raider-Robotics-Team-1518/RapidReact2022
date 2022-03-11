@@ -20,30 +20,31 @@ public class LightsSubsystem extends SubsystemBase {
       setLEDState(LEDState.DEFAULT);
       return;
     }
+
     if(BallRejectSubsystem.getCurrentColorBall().equalsIgnoreCase("None")) {
       switch(BallRejectSubsystem.teamColor.toLowerCase()) {
-        case "Blue":
+        case "blue":
           setLEDState(LEDState.BLUE);
           return;
-        case "Red":
+        case "red":
           setLEDState(LEDState.RED);
           return;
       }
-    } else if(BallShooterSubsystem.shooterMotor.get() > 0.1d) {
+    /*} else if(BallShooterSubsystem.shooterMotor.get() > 0.1d) {
       switch(BallRejectSubsystem.teamColor.toLowerCase()) {
-        case "Blue":
+        case "blue":
           setLEDState(LEDState.BLUE_WITH_RED_STRIPE);
           return;
-        case "Red":
+        case "red":
           setLEDState(LEDState.RED_WITH_BLUE_STRIPE);
           return;
-      }
+      }*/
     } else {
       switch(BallRejectSubsystem.teamColor.toLowerCase()) {
-        case "Blue":
+        case "blue":
           setLEDState(LEDState.PULSE_BLUE);
           return;
-        case "Red":
+        case "red":
           setLEDState(LEDState.PULSE_RED);
           return;
       }
@@ -59,13 +60,13 @@ public class LightsSubsystem extends SubsystemBase {
 
 
   public enum LEDState {
-      DEFAULT(true, false, true), //(false, false, false),
-      BLUE(false, false, true),
-      RED(false, true, false),
-      PULSE_BLUE(false, true, true),
-      PULSE_RED(true, false, false),
-      RED_WITH_BLUE_STRIPE(true, false, true),
-      BLUE_WITH_RED_STRIPE(true, true, false);
+      DEFAULT(false, true, true), //(false, false, false),
+      BLUE(false, true, false),
+      RED(true, false, false),
+      PULSE_BLUE(false, false, true),
+      PULSE_RED(true, true, false),
+      RED_WITH_BLUE_STRIPE(false, true, true),
+      BLUE_WITH_RED_STRIPE(true, false, true);
   
       private final boolean do1, do2, do3;
       private LEDState(boolean do1, boolean do2, boolean do3) {

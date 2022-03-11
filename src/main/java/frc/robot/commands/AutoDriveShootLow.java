@@ -6,14 +6,13 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.AutoSubsystem;
 import frc.robot.subsystems.BallIndexerSubsystem;
 import frc.robot.subsystems.BallShooterSubsystem;
-import frc.robot.utils.LimeLight;
 
-public class AutoDriveShoot extends CommandBase{
-    private static final double distanceToDrive = 75; // inches
+public class AutoDriveShootLow extends CommandBase{
+    private static final double distanceToDrive = 42; // inches
     private static AutoSubsystem auto;
     private static boolean isDone = false;
 
-    public AutoDriveShoot() {
+    public AutoDriveShootLow() {
         auto = new AutoSubsystem();
     }
 
@@ -26,20 +25,14 @@ public class AutoDriveShoot extends CommandBase{
         System.out.println("AutoDriveShoot ---> execute()");
         if (!isFinished()) {
             System.out.println("AutoDriveShoot ---> Driving...");
-            auto.driveforward(distanceToDrive);
-            auto.stop();
-            RobotContainer.m_ballShooter.enableShooterMotor();
-            while (!RobotContainer.m_ballShooter.upToRPM()) {
-                Timer.delay(0.1);
-            }
+            RobotContainer.m_ballShooter.shooterManualMode();
+            Timer.delay(1.75);
             RobotContainer.m_ballIndexer.enableManIndexer();
-            Timer.delay(0.2);
+            Timer.delay(0.75);
             RobotContainer.m_ballIndexer.disableIndexer();
             RobotContainer.m_ballShooter.disableShooterMotor();
-/*            if(LimeLight.isTargetAvalible()) {
-                System.out.println("AutoDriveShoot ---> Hub found!");
-                auto.shootBall("AutoDriveShoot");
-            }*/
+            auto.driveforward(distanceToDrive);
+            auto.stop();
             end(false);
         }
     }

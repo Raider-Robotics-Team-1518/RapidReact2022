@@ -25,6 +25,7 @@ import frc.robot.commands.AutoDriveIntakeShoot;
 import frc.robot.commands.AutoDriveNoShoot;
 import frc.robot.commands.AutoDrivePickupShoot;
 import frc.robot.commands.AutoDriveShoot;
+import frc.robot.commands.AutoDriveShootLow;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -40,8 +41,8 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public static DriveTrain m_driveTrain = new DriveTrain();
   public final SolenoidSubsystem m_intakeSolenoid = new SolenoidSubsystem(0,1);
-  private final BallShooterSubsystem m_ballShooter = new BallShooterSubsystem();
-  private final BallIndexerSubsystem m_ballIndexer = new BallIndexerSubsystem();
+  public static BallShooterSubsystem m_ballShooter = new BallShooterSubsystem();
+  public static BallIndexerSubsystem m_ballIndexer = new BallIndexerSubsystem();
   private final IntakeSubsystem m_ballIntaker = new IntakeSubsystem();
   private final BallRejectSubsystem m_ballRejecter = new BallRejectSubsystem();
   //private final ClimbSubsystem m_climb = new ClimbSubsystem();
@@ -51,12 +52,15 @@ public class RobotContainer {
   public static Joystick joystick = new Joystick(0);
   public static XboxController controller = new XboxController(1);
   public JoystickButton shootButton;
+  public JoystickButton shootManButton;
   public JoystickButton directionButton;
   public JoystickButton indexButton;
+  public JoystickButton indexManButton;
   public JoystickButton intakeController;
   public JoystickButton backfeedButton;
   public JoystickButton intakeButton;
-  public JoystickButton switchPressure;
+  public JoystickButton switchPressureJ;
+  public JoystickButton switchPressureC;
   public JoystickButton climbUpButton;
   public JoystickButton climbDownButton;
 
@@ -68,10 +72,11 @@ public class RobotContainer {
 
     m_commandChooser.setDefaultOption("None", null);
     m_commandChooser.addOption("Drive only", new AutoDriveNoShoot());
-    m_commandChooser.addOption("Drive and Shoot 1 ball", new AutoDriveShoot());
+    m_commandChooser.addOption("Drive and Shoot Low", new AutoDriveShootLow());
+    m_commandChooser.addOption("Drive and Shoot 1 High", new AutoDriveShoot());
     m_commandChooser.addOption("Drive and Shoot 2 balls", new AutoDriveIntakeShoot());
     m_commandChooser.addOption("Drive n' Shoot, Drive n' Shoot", new AutoDrivePickupShoot());
-    SmartDashboard.putData("Autonomous Options", m_commandChooser);
+    SmartDashboard.putData("Autonomous Choices", m_commandChooser);
 
     // Configure the button bindings
     configureButtonBindings();
@@ -84,11 +89,11 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    switchPressure = new JoystickButton(joystick, 3);
-    switchPressure.whenPressed(new DeployIntake(m_intakeSolenoid));
+    switchPressureJ = new JoystickButton(joystick, 3);
+    switchPressureJ.whenPressed(new DeployIntake(m_intakeSolenoid));
 
-    switchPressure = new JoystickButton(controller, 7);
-    switchPressure.whenPressed(new DeployIntake(m_intakeSolenoid));
+    switchPressureC = new JoystickButton(controller, 7);
+    switchPressureC.whenPressed(new DeployIntake(m_intakeSolenoid));
 
     directionButton = new JoystickButton(joystick, 2);
     directionButton.whenPressed(() -> m_driveTrain.switchDriveDirection());
@@ -98,6 +103,12 @@ public class RobotContainer {
 
     indexButton = new JoystickButton(controller, 2);
     indexButton.whileHeld(() -> m_ballIndexer.enableIndexer()).whenReleased(() -> m_ballIndexer.disableIndexer());
+
+    shootManButton  = new JoystickButton(controller, 9);
+    shootManButton.whileHeld(() -> m_ballShooter.shooterManualMode()).whenReleased(() -> m_ballShooter.disableShooterMotor());
+
+    indexManButton = new JoystickButton(controller, 10);
+    indexManButton.whileHeld(() -> m_ballIndexer.enableManIndexer()).whenReleased(() -> m_ballIndexer.disableIndexer());
 
     backfeedButton = new JoystickButton(controller, 1);
     backfeedButton.whileHeld(() -> m_ballIndexer.backfeedIndexer()).whenReleased(() -> m_ballIndexer.disableIndexer());

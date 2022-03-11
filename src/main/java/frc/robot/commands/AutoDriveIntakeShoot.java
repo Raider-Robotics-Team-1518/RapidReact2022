@@ -20,13 +20,13 @@ public class AutoDriveIntakeShoot extends CommandBase{
 
     @Override
     public void initialize() {
-        DeployIntake.fire();
     }
 
     @Override
     public void execute() {
         System.out.println("AutoDriveIntakeShoot ---> execute()");
         if (!isFinished()) {
+            DeployIntake.fire();
             System.out.println("AutoDriveIntakeShoot ---> Intake engaged");
             IntakeSubsystem.enableIntaker();
             System.out.println("AutoDriveIntakeShoot ---> Driving...");

@@ -91,9 +91,9 @@ public class AutoSubsystem extends SubsystemBase {
    
     public void shootBall(String className) {
         double motorSpeed = MathHelper.distanceToMotorSpeed(LimeLight.getDistance(), true);
-        double neededRPM = MathHelper.distanceToRPM(LimeLight.getDistance(), true)-100;
+        double neededRPM = MathHelper.distanceToRPM(LimeLight.getDistance(), true);
         printShooterInfo(className, LimeLight.getDistance(), motorSpeed, neededRPM);
-        while (BallShooterSubsystem.shooterRPM < neededRPM) {
+        while (BallShooterSubsystem.shooterRPM < neededRPM+150) {
             BallShooterSubsystem.shooterMotor.set(motorSpeed);
         }
         System.out.println(className + " ---> Shooting ball!");

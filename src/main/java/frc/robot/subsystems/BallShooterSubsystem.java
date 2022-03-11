@@ -54,7 +54,7 @@ public class BallShooterSubsystem extends SubsystemBase {
     if(LimeLight.isTargetAvalible()) {
       double zRot = Math.max(-((LimeLight.getX()/Constants.CameraDerivative)), -Constants.AUTO_MIN_Z);
       pivoting = (LimeLight.getX() > Constants.CameraDeadZone) || (LimeLight.getX() < -Constants.CameraDeadZone);
-      if((LimeLight.getX() > Constants.CameraDeadZone) || (LimeLight.getX() < -Constants.CameraDeadZone)) {
+      if((LimeLight.getX() > Constants.CameraDeadZone) || (LimeLight.getX() < -Constants.CameraDeadZone -2)) {
         RobotContainer.m_driveTrain.driveByStick(0, zRot);
       }
     }
@@ -64,7 +64,11 @@ public class BallShooterSubsystem extends SubsystemBase {
     if(motorSpeed < 1.1d && LimeLight.getDistance() < 245) {
       autoThrottle = motorSpeed;
     }
-    shooterMotor.set(autoThrottle);
+    shooterMotor.set(autoThrottle+0.35);
+  }
+
+  public void shooterManualMode() {
+    shooterMotor.set(0.55d);
   }
 
   public void disableShooterMotor() {
@@ -82,7 +86,7 @@ public class BallShooterSubsystem extends SubsystemBase {
   }
 
   public static boolean upToRPM() {
-    return shooterRPM > desiredRPM-50;
+    return shooterRPM > desiredRPM;
   }
 
 

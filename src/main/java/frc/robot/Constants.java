@@ -20,10 +20,10 @@ public class Constants {
     public static final double CameraDeadZone = 1.0d;
     public static final double CameraDerivative = 25; // 25 is good
 
-    public static final double AUTO_MAX_X = 0.35;  // Maximum power for forward/back
-    public static final double AUTO_MAX_Z = 0.50;  // Maximum power to rotate
+    public static final double AUTO_MAX_X = 0.45;  // Maximum power for forward/back
+    public static final double AUTO_MAX_Z = 0.60;  // Maximum power to rotate
 
-    public static final double AUTO_MIN_Z = 0.40;  // Minimum power to rotate
+    public static final double AUTO_MIN_Z = 0.50;  // Minimum power to rotate
 
     public static final double GYRO_DEADZONE = 5;
 }

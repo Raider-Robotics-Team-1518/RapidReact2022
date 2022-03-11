@@ -14,12 +14,12 @@ public class AutoDriveNoShoot extends CommandBase {
 
   @Override
   public void initialize() {
-    DeployIntake.fire();
   }
   @Override
   public void execute() {
     System.out.println("AutoDriveNoShoot ---> execute()");
     if (!isFinished()) {
+      //DeployIntake.fire();
       System.out.println("AutoDriveNoShoot ---> Driving...");
       auto.driveforward(distanceToDrive);
       auto.stop();

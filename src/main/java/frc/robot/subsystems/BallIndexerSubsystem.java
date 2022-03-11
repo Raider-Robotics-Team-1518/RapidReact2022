@@ -23,6 +23,10 @@ public class BallIndexerSubsystem extends SubsystemBase {
         indexMotor.set(Constants.IndexSpeed);
     }
 
+    public void enableManIndexer() {
+        indexMotor.set(Constants.IndexSpeed);
+    }
+
     public void backfeedIndexer() {
         indexMotor.set(-Constants.IndexSpeed);
     }

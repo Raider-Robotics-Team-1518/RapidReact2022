@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.AutoSubsystem;
 import frc.robot.subsystems.BallIndexerSubsystem;
 import frc.robot.subsystems.BallRejectSubsystem;
@@ -36,11 +37,11 @@ public class AutoDrivePickupShoot extends CommandBase {
                 auto.shootBall("AutoDrivePickupShoot");
                 shotFirstBall = true;
                 if(shotFirstBall) {
-                    IntakeSubsystem.enableIntaker();
+                    RobotContainer.m_ballIntaker.enableIntaker();
                     auto.driveforward(25); // inches
                     auto.stop();
                     while(BallRejectSubsystem.getCurrentColorBall().equalsIgnoreCase("None")) {
-                        IntakeSubsystem.enableIntaker();
+                        RobotContainer.m_ballIntaker.enableIntaker();
                     }
                     auto.shootBall("AutoDrivePickupShoot");
                 }

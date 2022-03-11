@@ -14,7 +14,7 @@ public class IntakeSubsystem extends SubsystemBase {
         setIntakeIdleMode(IdleMode.kBrake);
     }
 
-    public static void enableIntaker() {
+    public void enableIntaker() {
         if(!BallRejectSubsystem.getCurrentColorBall().equalsIgnoreCase("None")) {
             intakeMotor.set(Constants.IntakeSpeed);
             BallIndexerSubsystem.indexMotor.set(0);
@@ -26,7 +26,7 @@ public class IntakeSubsystem extends SubsystemBase {
         //intakeMotor.set(Constants.IntakeSpeed);
     }
 
-    public static void disableIntaker() {
+    public void disableIntaker() {
         intakeMotor.set(0);
         BallIndexerSubsystem.indexMotor.set(0);
     }

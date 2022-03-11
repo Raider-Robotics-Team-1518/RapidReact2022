@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 
 public class DualSolenoid {
-    private final Solenoid solenoid1, solenoid2;
+    public final Solenoid solenoid1, solenoid2;
 
     public DualSolenoid(PneumaticsModuleType moduleType, int channel1, int channel2) {
         this.solenoid1 = new Solenoid(moduleType, channel1);

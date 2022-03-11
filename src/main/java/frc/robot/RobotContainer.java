@@ -26,6 +26,9 @@ import frc.robot.commands.AutoDriveNoShoot;
 import frc.robot.commands.AutoDrivePickupShoot;
 import frc.robot.commands.AutoDriveShoot;
 import frc.robot.commands.AutoDriveShootLow;
+import frc.robot.commands.AutoDriveShootLowIntake;
+import frc.robot.commands.AutoDriveShootLowIntakeHigh;
+import frc.robot.commands.AutoDriveShootLowIntakeLow;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -40,11 +43,11 @@ public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
   public static DriveTrain m_driveTrain = new DriveTrain();
-  public final SolenoidSubsystem m_intakeSolenoid = new SolenoidSubsystem(0,1);
+  public static SolenoidSubsystem m_intakeSolenoid = new SolenoidSubsystem(0,1);
   public static BallShooterSubsystem m_ballShooter = new BallShooterSubsystem();
   public static BallIndexerSubsystem m_ballIndexer = new BallIndexerSubsystem();
-  private final IntakeSubsystem m_ballIntaker = new IntakeSubsystem();
-  private final BallRejectSubsystem m_ballRejecter = new BallRejectSubsystem();
+  public static IntakeSubsystem m_ballIntaker = new IntakeSubsystem();
+  public static BallRejectSubsystem m_ballRejecter = new BallRejectSubsystem();
   //private final ClimbSubsystem m_climb = new ClimbSubsystem();
   public static LightsSubsystem m_blinkies = new LightsSubsystem();
   public static UsbCamera usbCamera;
@@ -71,11 +74,14 @@ public class RobotContainer {
     usbCamera.setVideoMode(PixelFormat.kMJPEG, 160, 120, 15);
 
     m_commandChooser.setDefaultOption("None", null);
-    m_commandChooser.addOption("Drive only", new AutoDriveNoShoot());
-    m_commandChooser.addOption("Drive and Shoot Low", new AutoDriveShootLow());
-    m_commandChooser.addOption("Drive and Shoot 1 High", new AutoDriveShoot());
-    m_commandChooser.addOption("Drive and Shoot 2 balls", new AutoDriveIntakeShoot());
-    m_commandChooser.addOption("Drive n' Shoot, Drive n' Shoot", new AutoDrivePickupShoot());
+    m_commandChooser.addOption("1. Drive only", new AutoDriveNoShoot());
+    m_commandChooser.addOption("2. Shoot Low and Drive", new AutoDriveShootLow());
+    m_commandChooser.addOption("3. Shoot Low and Drive + Get ball", new AutoDriveShootLowIntake());
+    m_commandChooser.addOption("4. Shoot Low and Drive + Get ball + Shoot Low", new AutoDriveShootLowIntakeLow());
+    m_commandChooser.addOption("5. Shoot Low and Drive + Get ball + Shoot High", new AutoDriveShootLowIntakeHigh());
+    m_commandChooser.addOption("6. Drive and Shoot 1 High", new AutoDriveShoot());
+    m_commandChooser.addOption("7. Drive and Shoot 2 balls", new AutoDriveIntakeShoot());
+    //m_commandChooser.addOption("Drive n' Shoot, Drive n' Shoot", new AutoDrivePickupShoot());
     SmartDashboard.putData("Autonomous Choices", m_commandChooser);
 
     // Configure the button bindings
@@ -89,6 +95,12 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+
+    /*
+    switchPressureJ.whenPressed(() -> DeployIntake.fireButtonPress());
+
+    switchPressureC.whenPressed(() -> DeployIntake.fireButtonPress());*/
+
     switchPressureJ = new JoystickButton(joystick, 3);
     switchPressureJ.whenPressed(new DeployIntake(m_intakeSolenoid));
 
@@ -114,10 +126,10 @@ public class RobotContainer {
     backfeedButton.whileHeld(() -> m_ballIndexer.backfeedIndexer()).whenReleased(() -> m_ballIndexer.disableIndexer());
 
     intakeButton = new JoystickButton(joystick, 1);
-    intakeButton.whileHeld(() -> IntakeSubsystem.enableIntaker()).whenReleased(() -> IntakeSubsystem.disableIntaker());
+    intakeButton.whileHeld(() -> m_ballIntaker.enableIntaker()).whenReleased(() -> m_ballIntaker.disableIntaker());
 
     intakeController = new JoystickButton(controller, 3);
-    intakeController.whileHeld(() -> IntakeSubsystem.enableIntaker()).whenReleased(() -> IntakeSubsystem.disableIntaker());
+    intakeController.whileHeld(() -> m_ballIntaker.enableIntaker()).whenReleased(() -> m_ballIntaker.disableIntaker());
     
     climbUpButton = new JoystickButton(controller, 5);
     climbUpButton.whileHeld(() -> ClimbSubsystem.enableClimb(true)).whenReleased(() -> ClimbSubsystem.disableClimb());

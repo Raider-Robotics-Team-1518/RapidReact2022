@@ -64,18 +64,22 @@ public class BallShooterSubsystem extends SubsystemBase {
     if(motorSpeed < 1.1d && LimeLight.getDistance() < 245) {
       autoThrottle = motorSpeed;
     }
-    shooterMotor.set(autoThrottle+0.35);
+    shooterMotor.set(autoThrottle+0.4);
   }
 
   public void shooterManualMode() {
-    shooterMotor.set(0.55d);
+    shooterMotor.set(0.50d); // 0.55d 
   }
 
   public void disableShooterMotor() {
     if(override) {
       return;
     }
-    shooterMotor.set(0);
+    shooterMotor.set(0.0d);
+  }
+
+  public void disableShooterMotorAuto() {
+    shooterMotor.set(0.0d);
   }
 
   public void doShooterDisplay() {

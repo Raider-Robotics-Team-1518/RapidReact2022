@@ -8,6 +8,7 @@ import frc.robot.RobotContainer;
 import frc.robot.utils.LimeLight;
 import frc.robot.utils.MathHelper;
 import edu.wpi.first.wpilibj.RobotState;
+import edu.wpi.first.wpilibj.Timer;
 
 public class AutoSubsystem extends SubsystemBase {
   /**
@@ -60,7 +61,7 @@ public class AutoSubsystem extends SubsystemBase {
     return RobotContainer.m_driveTrain.getEncoderAverage();
   }
 
-  protected boolean hasDrivenFarEnough(double startPos, double distance) {
+  public boolean hasDrivenFarEnough(double startPos, double distance) {
 		//currentPosition = ((Robot.rm.lift.getSensorCollection().getQuadraturePosition() + Robot.rm.climb.getSensorCollection().getQuadraturePosition()) / 2) ;
 		currentPosition = (RobotContainer.m_driveTrain.getEncoderAverage());
 		targetPulseCount = distance / circumferenceInInches * pulsesPerRotation;
@@ -75,11 +76,13 @@ public class AutoSubsystem extends SubsystemBase {
 				}
 			}
 			else { // Driving REVERSE
-				if (-currentPosition <= targetPosition) {
-					return true;
+				//System.out.println("CurrentPosition: " + currentPosition);
+				//System.out.println("TargetPosition: " + targetPosition);
+				if (currentPosition >= targetPosition) {
+					return false;
 				}
 				else {
-					return false;
+					return true;
 				}
 			}
 		}
@@ -125,12 +128,12 @@ public class AutoSubsystem extends SubsystemBase {
     
 	protected boolean gyroDrive(double distance) {
 		RobotContainer.m_driveTrain.gyro.reset();
-		RobotContainer.m_driveTrain.resetAllEncoders();
+		//RobotContainer.m_driveTrain.resetAllEncoders();
 		startPosition = RobotContainer.m_driveTrain.getEncoderAverage();
 		//double targetPosition = (distance / circumferenceInInches * pulsesPerRotation);
 		//System.out.println(hasDrivenFarEnough(startPosition, distance));
 		while (hasDrivenFarEnough(startPosition, distance) == false) {
-			RobotContainer.m_driveTrain.updateEncoders();
+			//RobotContainer.m_driveTrain.updateEncoders();
 			double drift = readGyro() / 100;
 			drift = Math.min(drift, 0.1);
 			if (distance > 0) {
@@ -149,12 +152,14 @@ public class AutoSubsystem extends SubsystemBase {
 	}
 
 	//Drive Directions
-	public void driveforward(double distance) {
+	public boolean driveforward(double distance) {
 		gyroDrive(distance);
+		return true;
 	}
 	
-	public void drivebackward(double distance) {
+	public boolean drivebackward(double distance) {
 		gyroDrive(-Math.abs(distance));
+		return true;
 	}
 	
 	public void turnleft(double degrees) {

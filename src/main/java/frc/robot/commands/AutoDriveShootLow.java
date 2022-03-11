@@ -33,6 +33,9 @@ public class AutoDriveShootLow extends CommandBase{
             RobotContainer.m_ballShooter.disableShooterMotor();
             auto.driveforward(distanceToDrive);
             auto.stop();
+            //DeployIntake.fire();
+            RobotContainer.m_intakeSolenoid.dualSolenoid.solenoid1.set(false);
+            RobotContainer.m_intakeSolenoid.dualSolenoid.solenoid2.set(true);
             end(false);
         }
     }

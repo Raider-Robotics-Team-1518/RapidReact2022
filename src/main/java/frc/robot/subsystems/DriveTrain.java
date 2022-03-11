@@ -56,7 +56,7 @@ public class DriveTrain extends SubsystemBase {
     /*if(BallShooterSubsystem.INST.isPivoting()) {
       return;
     }*/
-    double x = stick.getY();
+    double x = stick.getY()*0.9d;
     double z = -stick.getZ()*0.65d;
     m_drive.arcadeDrive(reversed ? -x : x, z);
   }

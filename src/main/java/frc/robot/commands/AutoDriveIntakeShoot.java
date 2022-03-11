@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.AutoSubsystem;
 import frc.robot.subsystems.BallIndexerSubsystem;
 import frc.robot.subsystems.BallShooterSubsystem;
@@ -28,7 +29,7 @@ public class AutoDriveIntakeShoot extends CommandBase{
         if (!isFinished()) {
             DeployIntake.fire();
             System.out.println("AutoDriveIntakeShoot ---> Intake engaged");
-            IntakeSubsystem.enableIntaker();
+            RobotContainer.m_ballIntaker.enableIntaker();
             System.out.println("AutoDriveIntakeShoot ---> Driving...");
             auto.driveforward(distanceToDrive);
             auto.stop();

@@ -14,6 +14,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public class BallShooterSubsystem extends SubsystemBase {
   public static CANSparkMax shooterMotor = new CANSparkMax(Constants.ShooterMotorID, MotorType.kBrushless);
+  public static CANSparkMax backSpinMotor = new CANSparkMax(Constants.BackSpinMotorID, MotorType.kBrushless);
   public static RelativeEncoder shooterMotorEncoder = shooterMotor.getEncoder();
 
   public static boolean override = false;
@@ -42,33 +43,38 @@ public class BallShooterSubsystem extends SubsystemBase {
   }
 
   public boolean isPivoting() {
-    return (!override && LimeLight.isTargetAvalible() && shooterMotor.get() > 0.1d && ((LimeLight.getX() > Constants.CameraDeadZone) || (LimeLight.getX() < -Constants.CameraDeadZone)));
+    return (!override && LimeLight.isTargetAvalible() && shooterMotor.get() > 0.1d && LimeLight.isOutsideDeadZone());
   }
 
   public void enableShooterMotor() {
     if(override) {
       return;
     }
-
-    // auto correct to center to target
-    if(LimeLight.isTargetAvalible()) {
-      double zRot = Math.max(-((LimeLight.getX()/Constants.CameraDerivative)), -Constants.AUTO_MIN_Z);
-      pivoting = (LimeLight.getX() > Constants.CameraDeadZone) || (LimeLight.getX() < -Constants.CameraDeadZone);
-      if((LimeLight.getX() > Constants.CameraDeadZone) || (LimeLight.getX() < -Constants.CameraDeadZone -2)) {
-        RobotContainer.m_driveTrain.driveByStick(0, zRot);
+    double shooterPower = (-0.5*RobotContainer.joystick.getThrottle())+0.5;
+    shooterMotor.set(shooterPower);
+    backSpinMotor.set(shooterPower/2);
+    // auto center
+    if(LimeLight.isTargetAvalible() && LimeLight.isOutsideDeadZone()) {
+      if(LimeLight.rightOfDeadZone()) {
+        RobotContainer.m_driveTrain.driveByStick(0, MathHelper.getLimeLightRamping());
+      } else if(LimeLight.leftOfDeadZone()) {
+        RobotContainer.m_driveTrain.driveByStick(0, -MathHelper.getLimeLightRamping());
       }
     }
+
+    /*
 
     double motorSpeed = MathHelper.distanceToMotorSpeed(LimeLight.getDistance(), true);
     desiredRPM = MathHelper.distanceToRPM(LimeLight.getDistance(), true);
     if(motorSpeed < 1.1d && LimeLight.getDistance() < 245) {
       autoThrottle = motorSpeed;
     }
-    shooterMotor.set(autoThrottle+0.4);
+    shooterMotor.set(autoThrottle+0.50d);*/
   }
 
   public void shooterManualMode() {
     shooterMotor.set(0.50d); // 0.55d 
+    backSpinMotor.set(0.25d);
   }
 
   public void disableShooterMotor() {
@@ -76,10 +82,7 @@ public class BallShooterSubsystem extends SubsystemBase {
       return;
     }
     shooterMotor.set(0.0d);
-  }
-
-  public void disableShooterMotorAuto() {
-    shooterMotor.set(0.0d);
+    backSpinMotor.set(0.0d);
   }
 
   public void doShooterDisplay() {
@@ -90,7 +93,7 @@ public class BallShooterSubsystem extends SubsystemBase {
   }
 
   public static boolean upToRPM() {
-    return shooterRPM > desiredRPM;
+    return shooterRPM > desiredRPM-100;
   }
 
 

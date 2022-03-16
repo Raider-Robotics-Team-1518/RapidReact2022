@@ -53,11 +53,8 @@ public class DriveTrain extends SubsystemBase {
   }
 
   public void driveByStick(Joystick stick) {
-    /*if(BallShooterSubsystem.INST.isPivoting()) {
-      return;
-    }*/
-    double x = stick.getY()*0.9d;
-    double z = -stick.getZ()*0.65d;
+    double x = stick.getY()*SmartDashboard.getNumber("X Factor", 0.9d);
+    double z = -stick.getZ()*SmartDashboard.getNumber("Z Factor", 0.65d);
     m_drive.arcadeDrive(reversed ? -x : x, z);
   }
 

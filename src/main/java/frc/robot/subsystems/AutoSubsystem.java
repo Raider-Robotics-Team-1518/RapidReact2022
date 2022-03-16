@@ -5,10 +5,12 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
-import frc.robot.utils.LimeLight;
-import frc.robot.utils.MathHelper;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class AutoSubsystem extends SubsystemBase {
   /**
@@ -28,7 +30,7 @@ public class AutoSubsystem extends SubsystemBase {
   private DriveTrain a_drive = RobotContainer.m_driveTrain;
 
   public AutoSubsystem() {
-    RobotContainer.m_driveTrain.setNeutralMode(NeutralMode.Coast);
+	RobotContainer.m_driveTrain.setNeutralMode(NeutralMode.Coast);
     resetMotorPositions();
   }
 
@@ -91,27 +93,58 @@ public class AutoSubsystem extends SubsystemBase {
 		}
 	}
 
-   
-    public void shootBall(String className) {
-        double motorSpeed = MathHelper.distanceToMotorSpeed(LimeLight.getDistance(), true);
-        double neededRPM = MathHelper.distanceToRPM(LimeLight.getDistance(), true);
-        printShooterInfo(className, LimeLight.getDistance(), motorSpeed, neededRPM);
-        while (BallShooterSubsystem.shooterRPM < neededRPM+150) {
-            BallShooterSubsystem.shooterMotor.set(motorSpeed);
-        }
-        System.out.println(className + " ---> Shooting ball!");
-        BallIndexerSubsystem.indexMotor.set(Constants.IndexSpeed);
-        System.out.println(className + " ---> Ball shot");
-    }
+	public void disableAllMotors() {
+        BallShooterSubsystem.shooterMotor.set(0.0d);
+        BallIndexerSubsystem.indexMotor.set(0.0d);
+        IntakeSubsystem.intakeMotor.set(0.0d);
+	}
 
-    private void printShooterInfo(String className, double dist, double motorSpeed, double neededRPM) {
-        System.out.println(className + " ---> ----------------------------");
-        System.out.println(className + " ---> Shooter Info: ");
-        System.out.println(className + " ---> Distance: " + dist);
-        System.out.println(className + " ---> Speed: " + motorSpeed);
-        System.out.println(className + " ---> Needed RPM: " + neededRPM);
-        System.out.println(className + " ---> ----------------------------");
-    }
+	public void waitForBall() {
+		while(RobotContainer.m_ballRejecter.getBallColorName(RobotContainer.m_ballRejecter.m_colorSensor.getColor()).equalsIgnoreCase("None") && RobotState.isAutonomous()) {
+			IntakeSubsystem.intakeMotor.set(Constants.IntakeSpeed);
+			BallIndexerSubsystem.indexMotor.set(Constants.IndexSpeed);
+			Timer.delay(0.1d);
+		}
+	}
+
+	public void disableIntakeSystem() {
+		IntakeSubsystem.intakeMotor.set(0);
+		BallIndexerSubsystem.indexMotor.set(0);
+	}
+	
+	public void enableIntake() {
+		IntakeSubsystem.intakeMotor.set(Constants.IntakeSpeed);
+	}
+
+	public void deployIntakeArms() {
+		RobotContainer.m_intakeSolenoid.dualSolenoid.solenoid1.set(false);
+		RobotContainer.m_intakeSolenoid.dualSolenoid.solenoid2.set(true);
+		// delay to prevent intake running while arms are not fully out
+		Timer.delay(1.25d);
+	}
+
+	public void retractIntakeArms() {
+		RobotContainer.m_intakeSolenoid.dualSolenoid.solenoid1.set(true);
+		RobotContainer.m_intakeSolenoid.dualSolenoid.solenoid2.set(false);
+	}
+
+	public void shootBallLow() {
+		RobotContainer.m_ballShooter.shooterManualMode();
+		Timer.delay(1.25);
+		RobotContainer.m_ballIndexer.enableManIndexer();
+		Timer.delay(0.75);
+		BallIndexerSubsystem.indexMotor.set(0);
+		BallShooterSubsystem.shooterMotor.set(0);
+	}
+
+	public void shootBallHigh() {
+		RobotContainer.m_ballShooter.enableShooterMotor();
+		Timer.delay(1.25);
+		RobotContainer.m_ballIndexer.enableManIndexer();
+		Timer.delay(0.75);
+		BallIndexerSubsystem.indexMotor.set(0);
+		BallShooterSubsystem.shooterMotor.set(0);
+	}
 
     protected boolean gyroTurn(double degrees) {
 		a_drive.gyro.reset();

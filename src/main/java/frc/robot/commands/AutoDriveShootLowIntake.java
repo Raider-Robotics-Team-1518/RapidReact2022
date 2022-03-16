@@ -1,16 +1,7 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.RobotState;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
-import frc.robot.RobotContainer;
 import frc.robot.subsystems.AutoSubsystem;
-import frc.robot.subsystems.BallIndexerSubsystem;
-import frc.robot.subsystems.BallRejectSubsystem;
-import frc.robot.subsystems.BallShooterSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.SolenoidSubsystem;
 
 public class AutoDriveShootLowIntake extends CommandBase{
     private static final double distanceToDrive = 42; // inches
@@ -27,31 +18,15 @@ public class AutoDriveShootLowIntake extends CommandBase{
     }
     @Override
     public void execute() {
-        System.out.println("AutoDriveShoot ---> execute()");
+        System.out.println("AutoDriveShootLowIntake ---> execute()");
         if (!isFinished()) {
-            System.out.println("AutoDriveShoot ---> Driving...");
-            RobotContainer.m_ballShooter.shooterMotor.set(0.5d);
-            Timer.delay(1.25d);
-            RobotContainer.m_ballIndexer.indexMotor.set(Constants.IndexSpeed);
-            Timer.delay(0.5d);
-            RobotContainer.m_ballIndexer.indexMotor.set(0.0d);
-            RobotContainer.m_ballShooter.shooterMotor.set(0.0d);
-
-            RobotContainer.m_intakeSolenoid.dualSolenoid.solenoid1.set(false);
-            RobotContainer.m_intakeSolenoid.dualSolenoid.solenoid2.set(true);
-            Timer.delay(1.0d);
-
-            RobotContainer.m_ballIntaker.intakeMotor.set(Constants.IntakeSpeed);
+            System.out.println("AutoDriveShootLowIntake ---> Driving...");
+            auto.shootBallLow();
+            auto.deployIntakeArms();
+            auto.enableIntake();
             auto.driveforward(distanceToDrive);
-            auto.stop();
-
-            while(RobotContainer.m_ballRejecter.getBallColorName(RobotContainer.m_ballRejecter.m_colorSensor.getColor()).equalsIgnoreCase("None") && RobotState.isAutonomous()) {
-                RobotContainer.m_ballIndexer.indexMotor.set(Constants.IndexSpeed);
-                Timer.delay(0.1d);
-            }
-    
-            RobotContainer.m_ballIntaker.intakeMotor.set(0);
-            RobotContainer.m_ballIndexer.indexMotor.set(0);
+            auto.waitForBall();
+            auto.disableIntakeSystem();
             end(false);
         }
     }
@@ -61,10 +36,8 @@ public class AutoDriveShootLowIntake extends CommandBase{
     public void end(boolean interrupted) {
         super.end(interrupted);
         isDone = true;
-        RobotContainer.m_ballShooter.shooterMotor.set(0.0d);
-        RobotContainer.m_ballIndexer.indexMotor.set(0.0d);
-        RobotContainer.m_ballIntaker.intakeMotor.set(0.0d);
-        System.out.println("AutoDriveShoot ---> end()");
+        auto.disableAllMotors();
+        System.out.println("AutoDriveShootLowIntake ---> end()");
     }
 
     // Returns true when the command should end.

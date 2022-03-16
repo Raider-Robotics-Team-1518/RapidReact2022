@@ -7,9 +7,11 @@ package frc.robot;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoMode.PixelFormat;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DeployIntake;
@@ -21,14 +23,7 @@ import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LightsSubsystem;
 import frc.robot.subsystems.SolenoidSubsystem;
-import frc.robot.commands.AutoDriveIntakeShoot;
-import frc.robot.commands.AutoDriveNoShoot;
-import frc.robot.commands.AutoDrivePickupShoot;
-import frc.robot.commands.AutoDriveShoot;
-import frc.robot.commands.AutoDriveShootLow;
-import frc.robot.commands.AutoDriveShootLowIntake;
-import frc.robot.commands.AutoDriveShootLowIntakeHigh;
-import frc.robot.commands.AutoDriveShootLowIntakeLow;
+import frc.robot.commands.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -48,7 +43,7 @@ public class RobotContainer {
   public static BallIndexerSubsystem m_ballIndexer = new BallIndexerSubsystem();
   public static IntakeSubsystem m_ballIntaker = new IntakeSubsystem();
   public static BallRejectSubsystem m_ballRejecter = new BallRejectSubsystem();
-  //private final ClimbSubsystem m_climb = new ClimbSubsystem();
+  public static ClimbSubsystem m_climb = new ClimbSubsystem();
   public static LightsSubsystem m_blinkies = new LightsSubsystem();
   public static UsbCamera usbCamera;
 
@@ -66,6 +61,7 @@ public class RobotContainer {
   public JoystickButton switchPressureC;
   public JoystickButton climbUpButton;
   public JoystickButton climbDownButton;
+  public static Alliance allianceColor = DriverStation.Alliance.Invalid;
 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -77,13 +73,13 @@ public class RobotContainer {
     m_commandChooser.addOption("1. Drive only", new AutoDriveNoShoot());
     m_commandChooser.addOption("2. Shoot Low and Drive", new AutoDriveShootLow());
     m_commandChooser.addOption("3. Shoot Low and Drive + Get ball", new AutoDriveShootLowIntake());
-    m_commandChooser.addOption("4. Shoot Low and Drive + Get ball + Shoot Low", new AutoDriveShootLowIntakeLow());
+    m_commandChooser.addOption("4a. Shoot Low and Drive + Get ball + Shoot Low", new AutoDriveShootLowIntakeLow());
+    m_commandChooser.addOption("4b. Shoot Low and Drive + Get ball + Shoot Low (Wall side)", new AutoDriveShootLowIntakeLowShort());
     m_commandChooser.addOption("5. Shoot Low and Drive + Get ball + Shoot High", new AutoDriveShootLowIntakeHigh());
-    m_commandChooser.addOption("6. Drive and Shoot 1 High", new AutoDriveShoot());
-    m_commandChooser.addOption("7. Drive and Shoot 2 balls", new AutoDriveIntakeShoot());
-    //m_commandChooser.addOption("Drive n' Shoot, Drive n' Shoot", new AutoDrivePickupShoot());
-    SmartDashboard.putData("Autonomous Choices", m_commandChooser);
-
+    m_commandChooser.addOption("6. Shoot High and Drive + Get ball + Shoot High", new AutoDriveShootHighIntakeHigh());
+    SmartDashboard.putData("Auto Selector:", m_commandChooser);
+    SmartDashboard.putNumber("X Factor", 0.9d);
+    SmartDashboard.putNumber("Z Factor", 0.65d);
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -95,12 +91,6 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-
-    /*
-    switchPressureJ.whenPressed(() -> DeployIntake.fireButtonPress());
-
-    switchPressureC.whenPressed(() -> DeployIntake.fireButtonPress());*/
-
     switchPressureJ = new JoystickButton(joystick, 3);
     switchPressureJ.whenPressed(new DeployIntake(m_intakeSolenoid));
 
@@ -132,9 +122,9 @@ public class RobotContainer {
     intakeController.whileHeld(() -> m_ballIntaker.enableIntaker()).whenReleased(() -> m_ballIntaker.disableIntaker());
     
     climbUpButton = new JoystickButton(controller, 5);
-    climbUpButton.whileHeld(() -> ClimbSubsystem.enableClimb(true)).whenReleased(() -> ClimbSubsystem.disableClimb());
+    climbUpButton.whileHeld(() -> m_climb.enableClimb(true)).whenReleased(() -> m_climb.disableClimb());
     
     climbDownButton = new JoystickButton(controller, 6);
-    climbDownButton.whileHeld(() -> ClimbSubsystem.enableClimb(false)).whenReleased(() -> ClimbSubsystem.disableClimb());
+    climbDownButton.whileHeld(() -> m_climb.enableClimb(false)).whenReleased(() -> m_climb.disableClimb());
   }
 }

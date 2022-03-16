@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -60,7 +62,21 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_autoMode = m_robotContainer.m_commandChooser.getSelected();
+    RobotContainer.allianceColor = DriverStation.getAlliance();
+    SmartDashboard.putString("AllianceColor", RobotContainer.allianceColor.toString());
+    if(RobotContainer.allianceColor == DriverStation.Alliance.Blue) {
+      SmartDashboard.putString("Limelight-Pipeline", "Switch to BLUE pipeline");
+      NetworkTableInstance.getDefault().getTable("limelight-ball").getEntry("pipeline").setNumber(2);
+    }
+    else if (RobotContainer.allianceColor == DriverStation.Alliance.Red) {
+      SmartDashboard.putString("Limelight-Pipeline", "Switch to RED pipeline");
+      NetworkTableInstance.getDefault().getTable("limelight-ball").getEntry("pipeline").setNumber(3);
+    }
+    else {
+      NetworkTableInstance.getDefault().getTable("limelight-ball").getEntry("pipeline").setNumber(0);
+      SmartDashboard.putString("Limelight-Pipeline", "ALLIANCE COLOR UNAVAILABLE");
+    }
+      m_autoMode = m_robotContainer.m_commandChooser.getSelected();
     if (m_autoMode != null) {
       m_autoMode.execute();
     }

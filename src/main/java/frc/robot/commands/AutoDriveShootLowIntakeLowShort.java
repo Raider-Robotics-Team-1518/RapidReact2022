@@ -3,27 +3,34 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.AutoSubsystem;
 
-public class AutoDriveShootLow extends CommandBase{
-    private static final double distanceToDrive = 42; // inches
+public class AutoDriveShootLowIntakeLowShort extends CommandBase{
+    private static final double distanceToDrive = 38; // inches
+    private static final double backwardDistance = 36; // inches
     private static AutoSubsystem auto;
     private static boolean isDone = false;
 
-    public AutoDriveShootLow() {
+    public AutoDriveShootLowIntakeLowShort() {
         auto = new AutoSubsystem();
     }
 
     @Override
     public void initialize() {
     }
-
     @Override
     public void execute() {
-        System.out.println("AutoDriveShootLow ---> execute()");
+        System.out.println("AutoDriveShootLowIntakeLowShort ---> execute()");
         if (!isFinished()) {
-            System.out.println("AutoDriveShootLow ---> Driving...");
+            System.out.println("AutoDriveShootLowIntakeLowShort ---> Driving...");
             auto.shootBallLow();
-            auto.driveforward(distanceToDrive);
             auto.deployIntakeArms();
+            auto.enableIntake();
+            auto.driveforward(distanceToDrive);
+
+            auto.waitForBall();
+
+            auto.disableIntakeSystem();
+            auto.drivebackward(backwardDistance);
+            auto.shootBallLow();
             end(false);
         }
     }
@@ -34,7 +41,7 @@ public class AutoDriveShootLow extends CommandBase{
         super.end(interrupted);
         isDone = true;
         auto.disableAllMotors();
-        System.out.println("AutoDriveShootLow ---> end()");
+        System.out.println("AutoDriveShootLowIntakeLowShort ---> end()");
     }
 
     // Returns true when the command should end.

@@ -1,5 +1,7 @@
 package frc.robot.utils;
 
+import frc.robot.Constants;
+
 public class MathHelper {
 
     public static double distanceToRPM(double distance, boolean upperHub) {
@@ -18,6 +20,15 @@ public class MathHelper {
     public static double distanceToMotorSpeed(double distance, boolean upperHub) {
         double rpm = distanceToRPM(distance, upperHub);
         return rpmToSpeed(rpm);
+    }
+
+    private static double getAbsoluteX() {
+        return Math.abs(LimeLight.getX());
+    }
+
+    public static double getLimeLightRamping() {
+        double rampedPower = 0.325*Math.pow(1.0215, getAbsoluteX());
+        return rampedPower < Constants.AUTO_MIN_Z ? Constants.AUTO_MIN_Z : rampedPower;
     }
     
 }

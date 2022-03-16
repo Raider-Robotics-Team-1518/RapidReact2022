@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 
 public class LightsSubsystem extends SubsystemBase {
   public LEDState lightState = LEDState.DEFAULT;
@@ -22,7 +23,7 @@ public class LightsSubsystem extends SubsystemBase {
     }
 
     if(BallRejectSubsystem.getCurrentColorBall().equalsIgnoreCase("None")) {
-      switch(BallRejectSubsystem.teamColor.toLowerCase()) {
+      switch(RobotContainer.allianceColor.toString().toLowerCase()) {
         case "blue":
           setLEDState(LEDState.BLUE);
           return;
@@ -31,7 +32,7 @@ public class LightsSubsystem extends SubsystemBase {
           return;
       }
     /*} else if(BallShooterSubsystem.shooterMotor.get() > 0.1d) {
-      switch(BallRejectSubsystem.teamColor.toLowerCase()) {
+      switch(RobotContainer.allianceColor.toString().toLowerCase()) {
         case "blue":
           setLEDState(LEDState.BLUE_WITH_RED_STRIPE);
           return;
@@ -40,7 +41,7 @@ public class LightsSubsystem extends SubsystemBase {
           return;
       }*/
     } else {
-      switch(BallRejectSubsystem.teamColor.toLowerCase()) {
+      switch(RobotContainer.allianceColor.toString().toLowerCase()) {
         case "blue":
           setLEDState(LEDState.PULSE_BLUE);
           return;

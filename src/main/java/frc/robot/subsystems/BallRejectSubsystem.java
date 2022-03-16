@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 
 public class BallRejectSubsystem extends SubsystemBase {
     public static String teamColor;
@@ -19,7 +20,7 @@ public class BallRejectSubsystem extends SubsystemBase {
   
     @Override
     public void periodic() {
-        teamColor = DriverStation.getAlliance().toString();
+        teamColor = RobotContainer.allianceColor.toString();
         Color detectedColor = m_colorSensor.getColor();
         currentBall = getBallColorName(detectedColor);
 

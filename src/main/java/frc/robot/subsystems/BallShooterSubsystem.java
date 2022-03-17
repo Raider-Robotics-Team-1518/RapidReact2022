@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -15,6 +16,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 public class BallShooterSubsystem extends SubsystemBase {
   public static CANSparkMax shooterMotor = new CANSparkMax(Constants.ShooterMotorID, MotorType.kBrushless);
   public static CANSparkMax shooterMotor2 = new CANSparkMax(Constants.ShooterMotorID2, MotorType.kBrushless);
+  public static MotorControllerGroup shooterGroup = new MotorControllerGroup(shooterMotor, shooterMotor2);
   public static RelativeEncoder shooterMotorEncoder = shooterMotor.getEncoder();
 
   public static boolean override = false;
@@ -31,6 +33,7 @@ public class BallShooterSubsystem extends SubsystemBase {
   public BallShooterSubsystem() {
     shooterMotorEncoder.setPosition(0);
     setShooterIdleMode(IdleMode.kCoast);
+    shooterMotor2.setInverted(true);
     posDifference = 0;
     lastPos1 = lastPos2 = -1;
     INST = this;
@@ -50,9 +53,10 @@ public class BallShooterSubsystem extends SubsystemBase {
     if(override) {
       return;
     }
-    double shooterPower = (-0.5*RobotContainer.joystick.getThrottle())+0.5;
-    shooterMotor.set(shooterPower);
-    shooterMotor2.set(-shooterPower); // motor is in reverse
+    double shooterPower = 1.0d; //(-0.5*RobotContainer.joystick.getThrottle())+0.5;
+    shooterGroup.set(shooterPower);
+    //shooterMotor.set(shooterPower);
+    //shooterMotor2.set(-shooterPower); // motor is in reverse
     // auto center
     if(LimeLight.isTargetAvalible() && LimeLight.isOutsideDeadZone()) {
       if(LimeLight.rightOfDeadZone()) {
@@ -73,16 +77,18 @@ public class BallShooterSubsystem extends SubsystemBase {
   }
 
   public void shooterManualMode() {
-    shooterMotor.set(0.50d); // 0.55d 
-    shooterMotor2.set(0.50d);
+    shooterGroup.set(0.55d);
+    //shooterMotor.set(0.50d); // 0.55d 
+    //shooterMotor2.set(0.50d);
   }
 
   public void disableShooterMotor() {
     if(override) {
       return;
     }
-    shooterMotor.set(0.0d);
-    shooterMotor2.set(0.0d);
+    shooterGroup.set(0.0d);
+    //shooterMotor.set(0.0d);
+    //shooterMotor2.set(0.0d);
   }
 
   public void doShooterDisplay() {
@@ -117,6 +123,7 @@ public class BallShooterSubsystem extends SubsystemBase {
 
   public void setShooterIdleMode(IdleMode idleMode) {
     shooterMotor.setIdleMode(idleMode);
+    shooterMotor2.setIdleMode(idleMode);
   }
 
 }

@@ -54,7 +54,7 @@ public class DriveTrain extends SubsystemBase {
 
   public void driveByStick(Joystick stick) {
     double x = stick.getY()*SmartDashboard.getNumber("X Factor", 0.9d);
-    double z = Math.pow(-stick.getZ()*SmartDashboard.getNumber("Z Factor", 0.65d), 3);
+    double z = Math.pow(-stick.getZ(), 3) * 0.75d;
     m_drive.arcadeDrive(reversed ? -x : x, z);
   }
 

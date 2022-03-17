@@ -5,12 +5,8 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class AutoSubsystem extends SubsystemBase {
   /**
@@ -95,6 +91,7 @@ public class AutoSubsystem extends SubsystemBase {
 
 	public void disableAllMotors() {
         BallShooterSubsystem.shooterMotor.set(0.0d);
+		BallShooterSubsystem.shooterMotor2.set(0.0d);
         BallIndexerSubsystem.indexMotor.set(0.0d);
         IntakeSubsystem.intakeMotor.set(0.0d);
 	}
@@ -135,6 +132,7 @@ public class AutoSubsystem extends SubsystemBase {
 		Timer.delay(0.75);
 		BallIndexerSubsystem.indexMotor.set(0);
 		BallShooterSubsystem.shooterMotor.set(0);
+		BallShooterSubsystem.shooterMotor2.set(0);
 	}
 
 	public void shootBallHigh() {
@@ -144,6 +142,7 @@ public class AutoSubsystem extends SubsystemBase {
 		Timer.delay(0.75);
 		BallIndexerSubsystem.indexMotor.set(0);
 		BallShooterSubsystem.shooterMotor.set(0);
+		BallShooterSubsystem.shooterMotor2.set(0);
 	}
 
     protected boolean gyroTurn(double degrees) {

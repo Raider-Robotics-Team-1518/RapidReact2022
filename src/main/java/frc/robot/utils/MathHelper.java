@@ -27,7 +27,12 @@ public class MathHelper {
     }
 
     public static double getLimeLightRamping() {
-        double rampedPower = 0.325*Math.pow(1.0215, getAbsoluteX());
+        double rampedPower = 0.325*Math.pow(1.0215, getAbsoluteX()); // equation made using exponential regression for a more proper ramping
+        return rampedPower < Constants.AUTO_MIN_Z ? Constants.AUTO_MIN_Z : rampedPower;
+    }
+
+    public static double getBallLimeLightRamping() {
+        double rampedPower = 0.1723*Math.pow(1.0731, getAbsoluteX());
         return rampedPower < Constants.AUTO_MIN_Z ? Constants.AUTO_MIN_Z : rampedPower;
     }
     

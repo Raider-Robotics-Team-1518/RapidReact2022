@@ -14,7 +14,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public class BallShooterSubsystem extends SubsystemBase {
   public static CANSparkMax shooterMotor = new CANSparkMax(Constants.ShooterMotorID, MotorType.kBrushless);
-  public static CANSparkMax backSpinMotor = new CANSparkMax(Constants.BackSpinMotorID, MotorType.kBrushless);
+  public static CANSparkMax shooterMotor2 = new CANSparkMax(Constants.ShooterMotorID2, MotorType.kBrushless);
   public static RelativeEncoder shooterMotorEncoder = shooterMotor.getEncoder();
 
   public static boolean override = false;
@@ -52,7 +52,7 @@ public class BallShooterSubsystem extends SubsystemBase {
     }
     double shooterPower = (-0.5*RobotContainer.joystick.getThrottle())+0.5;
     shooterMotor.set(shooterPower);
-    backSpinMotor.set(shooterPower/2);
+    shooterMotor2.set(-shooterPower); // motor is in reverse
     // auto center
     if(LimeLight.isTargetAvalible() && LimeLight.isOutsideDeadZone()) {
       if(LimeLight.rightOfDeadZone()) {
@@ -74,7 +74,7 @@ public class BallShooterSubsystem extends SubsystemBase {
 
   public void shooterManualMode() {
     shooterMotor.set(0.50d); // 0.55d 
-    backSpinMotor.set(0.25d);
+    shooterMotor2.set(0.50d);
   }
 
   public void disableShooterMotor() {
@@ -82,7 +82,7 @@ public class BallShooterSubsystem extends SubsystemBase {
       return;
     }
     shooterMotor.set(0.0d);
-    backSpinMotor.set(0.0d);
+    shooterMotor2.set(0.0d);
   }
 
   public void doShooterDisplay() {
@@ -93,7 +93,8 @@ public class BallShooterSubsystem extends SubsystemBase {
   }
 
   public static boolean upToRPM() {
-    return shooterRPM > desiredRPM-100;
+    return true;
+    //return shooterRPM > desiredRPM-100;
   }
 
 

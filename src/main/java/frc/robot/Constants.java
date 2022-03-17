@@ -5,7 +5,7 @@ public class Constants {
     public static final int BallIntakerID = 13;
     public static final int ClimbMotorID = 14;
     public static final int ShooterMotorID = 15;
-    public static final int BackSpinMotorID = 16;
+    public static final int ShooterMotorID2 = 16;
     
     public static final int RightFrontID = 2;
     public static final int RightRearID = 1;
@@ -19,6 +19,7 @@ public class Constants {
     public static final double RejectSpeed = 0.35d;
 
     public static final double CameraDeadZone = 1.0d;
+    public static final double BallCameraDeadZone = 10.0d;
 
     public static final double AUTO_MAX_X = 0.55;  // Maximum power for forward/back
     public static final double AUTO_MAX_Z = 0.60;  // Maximum power to rotate

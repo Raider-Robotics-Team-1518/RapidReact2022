@@ -1,9 +1,9 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DigitalOutput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.RobotContainer;
 
 public class LightsSubsystem extends SubsystemBase {
   public LEDState lightState = LEDState.DEFAULT;
@@ -23,7 +23,7 @@ public class LightsSubsystem extends SubsystemBase {
     }
 
     if(BallRejectSubsystem.getCurrentColorBall().equalsIgnoreCase("None")) {
-      switch(RobotContainer.allianceColor.toString().toLowerCase()) {
+      switch(DriverStation.getAlliance().toString().toLowerCase()) {
         case "blue":
           setLEDState(LEDState.BLUE);
           return;
@@ -41,7 +41,7 @@ public class LightsSubsystem extends SubsystemBase {
           return;
       }*/
     } else {
-      switch(RobotContainer.allianceColor.toString().toLowerCase()) {
+      switch(DriverStation.getAlliance().toString().toLowerCase()) {
         case "blue":
           setLEDState(LEDState.PULSE_BLUE);
           return;

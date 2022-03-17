@@ -7,7 +7,6 @@ package frc.robot;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoMode.PixelFormat;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -57,11 +56,13 @@ public class RobotContainer {
   public JoystickButton intakeController;
   public JoystickButton backfeedButton;
   public JoystickButton intakeButton;
+  public JoystickButton autoCenterButton;
   public JoystickButton switchPressureJ;
   public JoystickButton switchPressureC;
   public JoystickButton climbUpButton;
   public JoystickButton climbDownButton;
-  public static Alliance allianceColor = DriverStation.Alliance.Invalid;
+
+  public static Alliance allianceColor = null;
 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -117,6 +118,9 @@ public class RobotContainer {
 
     intakeButton = new JoystickButton(joystick, 1);
     intakeButton.whileHeld(() -> m_ballIntaker.enableIntaker()).whenReleased(() -> m_ballIntaker.disableIntaker());
+
+    autoCenterButton = new JoystickButton(joystick, 4);
+    autoCenterButton.whenPressed(() -> m_ballIntaker.toggleAutoCenter());
 
     intakeController = new JoystickButton(controller, 3);
     intakeController.whileHeld(() -> m_ballIntaker.enableIntaker()).whenReleased(() -> m_ballIntaker.disableIntaker());

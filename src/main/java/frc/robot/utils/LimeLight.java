@@ -61,13 +61,3 @@ public class LimeLight {
         return (LimeLight.getX() > Constants.CameraDeadZone) || (LimeLight.getX() < -Constants.CameraDeadZone);
     }
 }
-    
-
-/*  Limelight section below is for chasing the balls.
-    Field of view on the camera is 60 degrees (+/- 30 degrees).
-    Dead zone can be +/- 10 degrees
-    Need to rename the tv, ta, tx, ta values above to indicate shooter camera.
-    Replicate same below with names for chaser camera functions.
-    Auto can then track left/right using tx from chaser camera.
-    zPower set to proportion of tx/10 degrees.
-*/

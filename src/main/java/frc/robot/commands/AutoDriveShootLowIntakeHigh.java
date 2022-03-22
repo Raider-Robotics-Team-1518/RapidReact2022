@@ -24,8 +24,9 @@ public class AutoDriveShootLowIntakeHigh extends CommandBase{
             auto.deployIntakeArms();
             auto.enableIntake();
             auto.driveforward(distanceToDrive);
+            auto.stop();
             auto.waitForBall();
-            auto.drivebackward(distanceToDrive);
+            auto.drivebackward(distanceToDrive+8);
             auto.shootBallHigh();
             end(false);
         }

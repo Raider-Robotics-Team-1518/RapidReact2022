@@ -44,7 +44,6 @@ public class RobotContainer {
   public static BallRejectSubsystem m_ballRejecter = new BallRejectSubsystem();
   public static ClimbSubsystem m_climb = new ClimbSubsystem();
   public static LightsSubsystem m_blinkies = new LightsSubsystem();
-  public static UsbCamera usbCamera;
 
   public static Joystick joystick = new Joystick(0);
   public static XboxController controller = new XboxController(1);
@@ -56,7 +55,6 @@ public class RobotContainer {
   public JoystickButton intakeController;
   public JoystickButton backfeedButton;
   public JoystickButton intakeButton;
-  public JoystickButton autoCenterButton;
   public JoystickButton switchPressureJ;
   public JoystickButton switchPressureC;
   public JoystickButton climbUpButton;
@@ -67,8 +65,6 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    usbCamera = CameraServer.startAutomaticCapture();
-    usbCamera.setVideoMode(PixelFormat.kMJPEG, 160, 120, 15);
 
     m_commandChooser.setDefaultOption("None", null);
     m_commandChooser.addOption("1. Drive only", new AutoDriveNoShoot());
@@ -78,7 +74,7 @@ public class RobotContainer {
     m_commandChooser.addOption("4b. Shoot Low and Drive + Get ball + Shoot Low (Wall side)", new AutoDriveShootLowIntakeLowShort());
     m_commandChooser.addOption("5. Shoot Low and Drive + Get ball + Shoot High", new AutoDriveShootLowIntakeHigh());
     m_commandChooser.addOption("6. Shoot High and Drive + Get ball + Shoot High", new AutoDriveShootHighIntakeHigh());
-    SmartDashboard.putData("Auto Selector:", m_commandChooser);
+    SmartDashboard.putData("Auto Options:", m_commandChooser);
     SmartDashboard.putNumber("X Factor", 0.9d);
     SmartDashboard.putNumber("Z Factor", 0.65d);
     // Configure the button bindings
@@ -118,9 +114,6 @@ public class RobotContainer {
 
     intakeButton = new JoystickButton(joystick, 1);
     intakeButton.whileHeld(() -> m_ballIntaker.enableIntaker()).whenReleased(() -> m_ballIntaker.disableIntaker());
-
-    autoCenterButton = new JoystickButton(joystick, 4);
-    autoCenterButton.whenPressed(() -> m_ballIntaker.toggleAutoCenter());
 
     intakeController = new JoystickButton(controller, 3);
     intakeController.whileHeld(() -> m_ballIntaker.enableIntaker()).whenReleased(() -> m_ballIntaker.disableIntaker());

@@ -26,13 +26,16 @@ public class AutoDriveShootHighIntakeHigh extends CommandBase{
             auto.shootBallHigh();
             auto.deployIntakeArms();
             auto.enableIntake();
-            auto.driveforward(distanceToDrive);
+            auto.driveforwardBall(distanceToDrive);
 
             auto.waitForBall();
 
             auto.disableIntakeSystem();
+            auto.gyroTurn(-auto.readGyro());
             auto.drivebackward(backwardDistance);
             auto.shootBallHigh();
+            auto.retractIntakeArms();
+            auto.driveforward(distanceToDrive);
             end(false);
         }
     }

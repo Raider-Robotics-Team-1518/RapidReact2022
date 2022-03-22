@@ -11,6 +11,7 @@ import frc.robot.Constants;
 public class BallRejectSubsystem extends SubsystemBase {
     public static String teamColor;
     private static String currentBall = ""; 
+    private long lastEject = System.currentTimeMillis();
     private final I2C.Port i2cPort = I2C.Port.kOnboard;
     public final ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
 
@@ -24,13 +25,14 @@ public class BallRejectSubsystem extends SubsystemBase {
         currentBall = getBallColorName(detectedColor);
         if(!getCurrentColorBall().equalsIgnoreCase(teamColor) && !getCurrentColorBall().equalsIgnoreCase("None")) {
             BallShooterSubsystem.override = BallIndexerSubsystem.override = true;
-            BallShooterSubsystem.shooterMotor.set(Constants.RejectSpeed);
-            BallShooterSubsystem.shooterMotor2.set(-Constants.RejectSpeed);
+            BallShooterSubsystem.shooterGroup.set(Constants.RejectSpeed);
             BallIndexerSubsystem.indexMotor.set(-1d);
         } else {
+          if(System.currentTimeMillis()-lastEject < 750) {
+            return;
+          }
             if(BallShooterSubsystem.override) {
-                BallShooterSubsystem.shooterMotor.set(0.0d);
-                BallShooterSubsystem.shooterMotor2.set(0.0d);
+                BallShooterSubsystem.shooterGroup.set(0.0d);
                 BallIndexerSubsystem.indexMotor.set(0.0d);
                 BallShooterSubsystem.override = BallIndexerSubsystem.override = false;
             }

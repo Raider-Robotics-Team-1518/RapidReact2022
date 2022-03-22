@@ -55,31 +55,20 @@ public class BallShooterSubsystem extends SubsystemBase {
     }
     double shooterPower = 1.0d; //(-0.5*RobotContainer.joystick.getThrottle())+0.5;
     shooterGroup.set(shooterPower);
-    //shooterMotor.set(shooterPower);
-    //shooterMotor2.set(-shooterPower); // motor is in reverse
+    desiredRPM = MathHelper.speedToRPM(shooterPower);
+
     // auto center
-    if(LimeLight.isTargetAvalible() && LimeLight.isOutsideDeadZone()) {
+    /*if(LimeLight.isTargetAvalible() && LimeLight.isOutsideDeadZone()) {
       if(LimeLight.rightOfDeadZone()) {
         RobotContainer.m_driveTrain.driveByStick(0, MathHelper.getLimeLightRamping());
       } else if(LimeLight.leftOfDeadZone()) {
         RobotContainer.m_driveTrain.driveByStick(0, -MathHelper.getLimeLightRamping());
       }
-    }
-
-    /*
-
-    double motorSpeed = MathHelper.distanceToMotorSpeed(LimeLight.getDistance(), true);
-    desiredRPM = MathHelper.distanceToRPM(LimeLight.getDistance(), true);
-    if(motorSpeed < 1.1d && LimeLight.getDistance() < 245) {
-      autoThrottle = motorSpeed;
-    }
-    shooterMotor.set(autoThrottle+0.50d);*/
+    }*/
   }
 
   public void shooterManualMode() {
     shooterGroup.set(0.55d);
-    //shooterMotor.set(0.50d); // 0.55d 
-    //shooterMotor2.set(0.50d);
   }
 
   public void disableShooterMotor() {
@@ -87,8 +76,6 @@ public class BallShooterSubsystem extends SubsystemBase {
       return;
     }
     shooterGroup.set(0.0d);
-    //shooterMotor.set(0.0d);
-    //shooterMotor2.set(0.0d);
   }
 
   public void doShooterDisplay() {
@@ -99,8 +86,7 @@ public class BallShooterSubsystem extends SubsystemBase {
   }
 
   public static boolean upToRPM() {
-    return true;
-    //return shooterRPM > desiredRPM-100;
+    return shooterRPM > desiredRPM-200;
   }
 
 

@@ -25,7 +25,7 @@ public class AutoDriveShootLowIntakeLowShort extends CommandBase{
             auto.deployIntakeArms();
             auto.enableIntake();
             auto.driveforward(distanceToDrive);
-
+            auto.stop();
             auto.waitForBall();
 
             auto.disableIntakeSystem();

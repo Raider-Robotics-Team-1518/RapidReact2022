@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import frc.robot.utils.MathHelper;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -22,6 +23,8 @@ public class AutoSubsystem extends SubsystemBase {
   double targetPulseCount = 0;
   double targetPosition = 0;
   double drivePower = 0;
+
+  private long lastRun = 0;
 
   private DriveTrain a_drive = RobotContainer.m_driveTrain;
 
@@ -97,9 +100,13 @@ public class AutoSubsystem extends SubsystemBase {
 	}
 
 	public void waitForBall() {
+		lastRun = System.currentTimeMillis();
 		while(RobotContainer.m_ballRejecter.getBallColorName(RobotContainer.m_ballRejecter.m_colorSensor.getColor()).equalsIgnoreCase("None") && RobotState.isAutonomous()) {
 			IntakeSubsystem.intakeMotor.set(Constants.IntakeSpeed);
-			BallIndexerSubsystem.indexMotor.set(Constants.IndexSpeed);
+			BallIndexerSubsystem.indexMotor.set(Constants.AutoIndexSpeed);
+			if(System.currentTimeMillis()-lastRun >= 5000) {
+				break;
+			}
 			Timer.delay(0.1d);
 		}
 	}
@@ -127,7 +134,7 @@ public class AutoSubsystem extends SubsystemBase {
 
 	public void shootBallLow() {
 		RobotContainer.m_ballShooter.shooterManualMode();
-		Timer.delay(1.25);
+		Timer.delay(0.33);
 		RobotContainer.m_ballIndexer.enableManIndexer();
 		Timer.delay(0.75);
 		BallIndexerSubsystem.indexMotor.set(0);
@@ -137,7 +144,7 @@ public class AutoSubsystem extends SubsystemBase {
 
 	public void shootBallHigh() {
 		RobotContainer.m_ballShooter.enableShooterMotor();
-		Timer.delay(1.25);
+		Timer.delay(0.875);
 		RobotContainer.m_ballIndexer.enableManIndexer();
 		Timer.delay(0.75);
 		BallIndexerSubsystem.indexMotor.set(0);
@@ -145,17 +152,17 @@ public class AutoSubsystem extends SubsystemBase {
 		BallShooterSubsystem.shooterMotor2.set(0);
 	}
 
-    protected boolean gyroTurn(double degrees) {
+    public boolean gyroTurn(double degrees) {
 		a_drive.gyro.reset();
-		while ((RobotState.isAutonomous() == true) && outsideDeadzone(degrees)) {
+		while ((RobotState.isAutonomous() == true) && outsideDeadZone()) {
 			RobotContainer.m_driveTrain.autonomousDrive(0, calcP(degrees));
 		}
 		stop();
 		return true;
 	}
 
-	private boolean outsideDeadzone(double deg) {
-		return (readGyro() < (deg-Constants.GYRO_DEADZONE)) || (readGyro() > (deg+Constants.GYRO_DEADZONE));
+	public boolean outsideDeadZone() {
+		return (readGyro() < -Constants.GYRO_DEADZONE && readGyro() > +Constants.GYRO_DEADZONE);
 	}
     
 	protected boolean gyroDrive(double distance) {
@@ -166,8 +173,42 @@ public class AutoSubsystem extends SubsystemBase {
 		//System.out.println(hasDrivenFarEnough(startPosition, distance));
 		while (hasDrivenFarEnough(startPosition, distance) == false) {
 			//RobotContainer.m_driveTrain.updateEncoders();
-			double drift = readGyro() / 100;
-			drift = Math.min(drift, 0.1);
+			double zRot = outsideDeadZone() ? 0.0d : calcP(0);
+			if (distance > 0) {
+				// a_drive.drive();
+				RobotContainer.m_driveTrain.autonomousDrive(-Constants.AUTO_MAX_X, zRot);  // FORWARD
+			} else {
+				// a_drive.drive();
+				RobotContainer.m_driveTrain.autonomousDrive(Constants.AUTO_MAX_X, zRot);  // REVERSE
+			}
+			
+			//System.out.println("Gyro Heading: " + drift);
+		}
+		
+		stop();
+		return true;
+	}
+
+	public boolean gyroDriveTurn(double distance) {
+		startPosition = RobotContainer.m_driveTrain.getEncoderAverage();
+		while (hasDrivenFarEnough(startPosition, distance) == false) {
+			double zRot = outsideDeadZone() ? 0.0d : calcP(0);
+			if (distance > 0) {
+				RobotContainer.m_driveTrain.autonomousDrive(-Constants.AUTO_MAX_X, zRot);  // FORWARD
+			} else {
+				RobotContainer.m_driveTrain.autonomousDrive(Constants.AUTO_MAX_X, zRot);  // REVERSE
+			}
+		}
+		
+		stop();
+		return true;
+	}
+
+
+	protected boolean limelightDrive(double distance) {
+		startPosition = RobotContainer.m_driveTrain.getEncoderAverage();
+		while (hasDrivenFarEnough(startPosition, distance) == false) {
+			double drift = MathHelper.getBallDrift();
 			if (distance > 0) {
 				// a_drive.drive();
 				RobotContainer.m_driveTrain.autonomousDrive(-Constants.AUTO_MAX_X, drift);  // FORWARD
@@ -193,6 +234,16 @@ public class AutoSubsystem extends SubsystemBase {
 		gyroDrive(-Math.abs(distance));
 		return true;
 	}
+
+	public boolean driveforwardBall(double distance) {
+		limelightDrive(distance);
+		return true;
+	}
+	
+	public boolean drivebackwardBall(double distance) {
+		limelightDrive(-Math.abs(distance));
+		return true;
+	}
 	
 	public void turnleft(double degrees) {
 		gyroTurn(-degrees);
@@ -204,13 +255,13 @@ public class AutoSubsystem extends SubsystemBase {
 	
 	//--------------------------------------
 
-	protected double readGyro() {
+	public double readGyro() {
 		double angle = RobotContainer.m_driveTrain.gyro.getAngle();
 		return angle;
 	}
 	
 	protected double calcP(double tAngle) {
-		return tAngle > readGyro() ? Constants.AUTO_MAX_Z : -Constants.AUTO_MAX_Z;
+		return tAngle > readGyro() ? -Constants.AUTO_MIN_Z : Constants.AUTO_MIN_Z;
 		
 	}
 	

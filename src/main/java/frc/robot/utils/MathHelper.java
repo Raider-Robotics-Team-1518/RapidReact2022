@@ -17,6 +17,10 @@ public class MathHelper {
         return 0.0002*rpm;
     }
 
+    public static double speedToRPM(double speed) {
+        return speed/0.0002;
+    }
+
     public static double distanceToMotorSpeed(double distance, boolean upperHub) {
         double rpm = distanceToRPM(distance, upperHub);
         return rpmToSpeed(rpm);
@@ -34,6 +38,17 @@ public class MathHelper {
     public static double getBallLimeLightRamping() {
         double rampedPower = 0.1723*Math.pow(1.0731, getAbsoluteX());
         return rampedPower < Constants.AUTO_MIN_Z ? Constants.AUTO_MIN_Z : rampedPower;
+    }
+
+    public static double getBallDrift() {
+        if(BallLimeLight.isTargetAvalible() && BallLimeLight.isOutsideDeadZone()) {
+            if(BallLimeLight.rightOfDeadZone()) {
+              return -MathHelper.getBallLimeLightRamping();
+            } else if(BallLimeLight.leftOfDeadZone()) {
+                return MathHelper.getBallLimeLightRamping();
+            }
+        }
+        return 0.0d;
     }
     
 }

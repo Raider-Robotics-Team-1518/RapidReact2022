@@ -15,11 +15,12 @@ public class Constants {
 
     public static final double IntakeSpeed = 0.85d;
     public static final double IndexSpeed = -0.65d;
+    public static final double AutoIndexSpeed = -0.30d;
     public static final double ClimbSpeed = 1.0d;
-    public static final double RejectSpeed = 0.35d;
+    public static final double RejectSpeed = 0.45d;
 
     public static final double CameraDeadZone = 1.0d;
-    public static final double BallCameraDeadZone = 10.0d;
+    public static final double BallCameraDeadZone = 2.5d;
 
     public static final double AUTO_MAX_X = 0.55;  // Maximum power for forward/back
     public static final double AUTO_MAX_Z = 0.60;  // Maximum power to rotate
@@ -27,5 +28,5 @@ public class Constants {
     public static final double AUTO_MIN_X = 0.3;  // Minimum power to rotate
     public static final double AUTO_MIN_Z = 0.35;  // Minimum power to rotate
 
-    public static final double GYRO_DEADZONE = 5;
+    public static final double GYRO_DEADZONE = 10;
 }

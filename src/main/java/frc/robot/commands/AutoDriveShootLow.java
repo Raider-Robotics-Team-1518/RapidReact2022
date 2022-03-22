@@ -23,6 +23,7 @@ public class AutoDriveShootLow extends CommandBase{
             System.out.println("AutoDriveShootLow ---> Driving...");
             auto.shootBallLow();
             auto.driveforward(distanceToDrive);
+            auto.stop();
             auto.deployIntakeArms();
             end(false);
         }

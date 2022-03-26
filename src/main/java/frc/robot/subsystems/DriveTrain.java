@@ -114,8 +114,8 @@ public class DriveTrain extends SubsystemBase {
   }
 
   public double getEncoderAverage(){
-    return ((Math.abs(leftFront.getSelectedSensorPosition()) + Math.abs(rightFront.getSelectedSensorPosition())) / 2);
-    //return (leftFront.getSelectedSensorPosition() - rightFront.getSelectedSensorPosition()) / 2;
+    //return ((Math.abs(leftFront.getSelectedSensorPosition()) + Math.abs(rightFront.getSelectedSensorPosition())) / 2);
+    return (leftFront.getSelectedSensorPosition() - rightFront.getSelectedSensorPosition()) / 2;
   }
 
   public void setNeutralMode(NeutralMode mode){
@@ -129,8 +129,8 @@ public class DriveTrain extends SubsystemBase {
     //m_leftEncoder = leftFront.getSelectedSensorPosition();
     //m_rightEncoder = rightFront.getSelectedSensorPosition();
     SmartDashboard.putNumber("ENC_Average", getEncoderAverage());
-    //SmartDashboard.putNumber("ENC_RightFront", rightFront.getSelectedSensorPosition());
-    //SmartDashboard.putNumber("ENC_LeftFront", leftFront.getSelectedSensorPosition());
+    SmartDashboard.putNumber("ENC_RightFront", rightFront.getSelectedSensorPosition());
+    SmartDashboard.putNumber("ENC_LeftFront", leftFront.getSelectedSensorPosition());
     //SmartDashboard.putNumber("ENC_RightRear", rightRear.getSelectedSensorPosition());
     //SmartDashboard.putNumber("ENC_LeftRear", leftRear.getSelectedSensorPosition());
 

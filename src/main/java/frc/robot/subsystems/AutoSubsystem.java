@@ -68,8 +68,8 @@ public class AutoSubsystem extends SubsystemBase {
 		targetPulseCount = distance / circumferenceInInches * pulsesPerRotation;
 		targetPosition = startPos + targetPulseCount;
 		if (RobotState.isAutonomous() == true) {
-			//SmartDashboard.putNumber("CurrentPos", currentPosition);
-			//SmartDashboard.putNumber("TargetPos", targetPosition);
+			SmartDashboard.putNumber("CurrentPos", currentPosition);
+			SmartDashboard.putNumber("TargetPos", targetPosition);
 			if (distance > 0) { // Driving FORWARD
 				if (currentPosition >= targetPosition) {
 					return true;
@@ -165,8 +165,10 @@ public class AutoSubsystem extends SubsystemBase {
     
 	protected boolean gyroDrive(double distance) {
 		RobotContainer.m_driveTrain.gyro.reset();
+		//RobotContainer.m_driveTrain.resetAllEncoders();  //Added Buckeye 3/26 8:17
 		startPosition = RobotContainer.m_driveTrain.getEncoderAverage();
 		while (hasDrivenFarEnough(startPosition, distance) == false) {
+			RobotContainer.m_driveTrain.updateEncoders();
 			double zRot = insideAngle(0) ? 0.0d : calcP(0);
 			if (distance > 0) {
 				RobotContainer.m_driveTrain.autonomousDrive(-Constants.AUTO_MAX_X, zRot);  // FORWARD

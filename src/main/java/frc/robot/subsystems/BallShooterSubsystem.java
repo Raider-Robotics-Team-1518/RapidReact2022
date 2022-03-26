@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.RobotContainer;
 import frc.robot.utils.LimeLight;
 import frc.robot.utils.MathHelper;
 
@@ -23,7 +22,6 @@ public class BallShooterSubsystem extends SubsystemBase {
 
   public static double shooterRPM = 0.0d;
   public static double desiredRPM = 0.0d;
-  private double autoThrottle = 0.0d;
 
   public static boolean pivoting = false;
   
@@ -53,22 +51,25 @@ public class BallShooterSubsystem extends SubsystemBase {
     if(override) {
       return;
     }
-    double shooterPower = 1.0d; //(-0.5*RobotContainer.joystick.getThrottle())+0.5;
+    double shooterPower = 0.77d; //(-0.5*RobotContainer.joystick.getThrottle())+0.5;
     shooterGroup.set(shooterPower);
     desiredRPM = MathHelper.speedToRPM(shooterPower);
+  }
 
-    // auto center
-    /*if(LimeLight.isTargetAvalible() && LimeLight.isOutsideDeadZone()) {
-      if(LimeLight.rightOfDeadZone()) {
-        RobotContainer.m_driveTrain.driveByStick(0, MathHelper.getLimeLightRamping());
-      } else if(LimeLight.leftOfDeadZone()) {
-        RobotContainer.m_driveTrain.driveByStick(0, -MathHelper.getLimeLightRamping());
-      }
-    }*/
+  public void enableShooterMotorAuto() {
+    if(override) {
+      return;
+    }
+    double shooterPower = 0.80d;
+    shooterGroup.set(shooterPower);
   }
 
   public void shooterManualMode() {
     shooterGroup.set(0.55d);
+  }
+
+  public void shooterManualModeAuto() {
+    shooterGroup.set(0.45d);
   }
 
   public void disableShooterMotor() {
@@ -79,10 +80,7 @@ public class BallShooterSubsystem extends SubsystemBase {
   }
 
   public void doShooterDisplay() {
-    SmartDashboard.putNumber("AutoThrottle", autoThrottle);
     SmartDashboard.putNumber("ShooterRPM", shooterRPM);
-    SmartDashboard.putNumber("TargetDistance", LimeLight.getDistance());
-    SmartDashboard.putBoolean("Target Locked", LimeLight.isTargetAvalible());
   }
 
   public static boolean upToRPM() {

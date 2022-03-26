@@ -4,7 +4,8 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.AutoSubsystem;
 
 public class AutoDriveShootLowIntakeHigh extends CommandBase{
-    private static final double distanceToDrive = 42; // inches
+    private static final double distanceToDrive = 54; // inches
+    private static final double backwardDistance = 58; // inches
     private static AutoSubsystem auto;
     private static boolean isDone = false;
 
@@ -23,11 +24,15 @@ public class AutoDriveShootLowIntakeHigh extends CommandBase{
             auto.shootBallLow();
             auto.deployIntakeArms();
             auto.enableIntake();
-            auto.driveforward(distanceToDrive);
-            auto.stop();
+            auto.driveforwardBall(distanceToDrive);
+
             auto.waitForBall();
-            auto.drivebackward(distanceToDrive+8);
+
+            auto.disableIntakeSystem();
+            auto.drivebackward(backwardDistance);
             auto.shootBallHigh();
+            auto.retractIntakeArms();
+            auto.driveforward(distanceToDrive);
             end(false);
         }
     }

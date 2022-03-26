@@ -24,13 +24,15 @@ public class AutoDriveShootLowIntakeLowShort extends CommandBase{
             auto.shootBallLow();
             auto.deployIntakeArms();
             auto.enableIntake();
-            auto.driveforward(distanceToDrive);
-            auto.stop();
+            auto.driveforwardBall(distanceToDrive);
+
             auto.waitForBall();
 
             auto.disableIntakeSystem();
             auto.drivebackward(backwardDistance);
             auto.shootBallLow();
+            auto.retractIntakeArms();
+            auto.driveforward(distanceToDrive);
             end(false);
         }
     }

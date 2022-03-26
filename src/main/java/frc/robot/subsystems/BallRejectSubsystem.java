@@ -12,7 +12,7 @@ public class BallRejectSubsystem extends SubsystemBase {
     public static String teamColor;
     private static String currentBall = ""; 
     private long lastEject = System.currentTimeMillis();
-    private final I2C.Port i2cPort = I2C.Port.kOnboard;
+    private final I2C.Port i2cPort = I2C.Port.kMXP;
     public final ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
 
     public BallRejectSubsystem() {
@@ -42,7 +42,7 @@ public class BallRejectSubsystem extends SubsystemBase {
         double r = c.red;
         if(r > 0.4) {
           return "Red";
-        } else if (r < 0.2) {
+        } else if (r < 0.25) {
           return "Blue";
         }
         return "None";

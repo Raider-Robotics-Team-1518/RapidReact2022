@@ -3,13 +3,12 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.AutoSubsystem;
 
-public class AutoDriveShootHighIntakeHigh extends CommandBase{
-    private static final double distanceToDrive = 54; // inches
-    private static final double backwardDistance = 58; // inches
+public class AutoDriveShootHigh extends CommandBase{
+    private static final double distanceToDrive = 42; // inches
     private static AutoSubsystem auto;
     private static boolean isDone = false;
 
-    public AutoDriveShootHighIntakeHigh() {
+    public AutoDriveShootHigh() {
         auto = new AutoSubsystem();
     }
 
@@ -17,24 +16,15 @@ public class AutoDriveShootHighIntakeHigh extends CommandBase{
     public void initialize() {
     }
 
-
     @Override
     public void execute() {
-        System.out.println("AutoDriveShootHighIntakeHigh ---> execute()");
+        System.out.println("AutoDriveShootHigh ---> execute()");
         if (!isFinished()) {
-            System.out.println("AutoDriveShootHighIntakeHigh ---> Driving...");
+            System.out.println("AutoDriveShootHigh ---> Driving...");
             auto.shootBallHigh();
-            auto.deployIntakeArms();
-            auto.enableIntake();
-            auto.driveforwardBall(distanceToDrive);
-
-            auto.waitForBall();
-
-            auto.disableIntakeSystem();
-            auto.drivebackward(backwardDistance);
-            auto.shootBallHigh();
-            auto.retractIntakeArms();
             auto.driveforward(distanceToDrive);
+            auto.stop();
+            auto.deployIntakeArms();
             end(false);
         }
     }
@@ -45,7 +35,7 @@ public class AutoDriveShootHighIntakeHigh extends CommandBase{
         super.end(interrupted);
         isDone = true;
         auto.disableAllMotors();
-        System.out.println("AutoDriveShootHighIntakeHigh ---> end()");
+        System.out.println("AutoDriveShootHigh ---> end()");
     }
 
     // Returns true when the command should end.
@@ -54,3 +44,4 @@ public class AutoDriveShootHighIntakeHigh extends CommandBase{
         return isDone;
     }
 }
+

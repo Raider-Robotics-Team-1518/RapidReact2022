@@ -115,6 +115,7 @@ public class DriveTrain extends SubsystemBase {
 
   public double getEncoderAverage(){
     return ((Math.abs(leftFront.getSelectedSensorPosition()) + Math.abs(rightFront.getSelectedSensorPosition())) / 2);
+    //return (leftFront.getSelectedSensorPosition() - rightFront.getSelectedSensorPosition()) / 2;
   }
 
   public void setNeutralMode(NeutralMode mode){

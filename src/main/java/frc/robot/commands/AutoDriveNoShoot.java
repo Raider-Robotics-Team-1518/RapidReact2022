@@ -20,7 +20,7 @@ public class AutoDriveNoShoot extends CommandBase {
     System.out.println("AutoDriveNoShoot ---> execute()");
     if (!isFinished()) {
       System.out.println("AutoDriveNoShoot ---> Driving...");
-      auto.driveforward(distanceToDrive);
+      auto.drivebackward(distanceToDrive);
       auto.stop();
       end(false);
     }

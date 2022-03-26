@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.IntakeSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -66,16 +65,13 @@ public class Robot extends TimedRobot {
     RobotContainer.allianceColor = DriverStation.getAlliance();
     SmartDashboard.putString("AllianceColor", RobotContainer.allianceColor.toString());
     if(RobotContainer.allianceColor == DriverStation.Alliance.Blue) {
-      SmartDashboard.putString("Limelight-Pipeline", "Switch to BLUE pipeline");
       NetworkTableInstance.getDefault().getTable("limelight-ball").getEntry("pipeline").setNumber(2);
     }
     else if (RobotContainer.allianceColor == DriverStation.Alliance.Red) {
-      SmartDashboard.putString("Limelight-Pipeline", "Switch to RED pipeline");
       NetworkTableInstance.getDefault().getTable("limelight-ball").getEntry("pipeline").setNumber(3);
     }
     else {
       NetworkTableInstance.getDefault().getTable("limelight-ball").getEntry("pipeline").setNumber(0);
-      SmartDashboard.putString("Limelight-Pipeline", "ALLIANCE COLOR UNAVAILABLE");
     }
       m_autoMode = m_robotContainer.m_commandChooser.getSelected();
     if (m_autoMode != null) {
@@ -101,26 +97,20 @@ public class Robot extends TimedRobot {
     RobotContainer.allianceColor = DriverStation.getAlliance();
     SmartDashboard.putString("AllianceColor", RobotContainer.allianceColor.toString());
     if(RobotContainer.allianceColor == DriverStation.Alliance.Blue) {
-      SmartDashboard.putString("Limelight-Pipeline", "Switch to BLUE pipeline");
       NetworkTableInstance.getDefault().getTable("limelight-ball").getEntry("pipeline").setNumber(2);
     }
     else if (RobotContainer.allianceColor == DriverStation.Alliance.Red) {
-      SmartDashboard.putString("Limelight-Pipeline", "Switch to RED pipeline");
       NetworkTableInstance.getDefault().getTable("limelight-ball").getEntry("pipeline").setNumber(3);
     }
     else {
       NetworkTableInstance.getDefault().getTable("limelight-ball").getEntry("pipeline").setNumber(0);
-      SmartDashboard.putString("Limelight-Pipeline", "ALLIANCE COLOR UNAVAILABLE");
-    }
-      m_autoMode = m_robotContainer.m_commandChooser.getSelected();
-    if (m_autoMode != null) {
-      m_autoMode.execute();
     }
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+
   }
 
   @Override

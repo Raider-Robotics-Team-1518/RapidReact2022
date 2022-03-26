@@ -4,9 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.cscore.UsbCamera;
-import edu.wpi.first.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -74,7 +71,8 @@ public class RobotContainer {
     m_commandChooser.addOption("4b. Shoot Low and Drive + Get ball + Shoot Low (Wall side)", new AutoDriveShootLowIntakeLowShort());
     m_commandChooser.addOption("5. Shoot Low and Drive + Get ball + Shoot High", new AutoDriveShootLowIntakeHigh());
     m_commandChooser.addOption("6. Shoot High and Drive + Get ball + Shoot High", new AutoDriveShootHighIntakeHigh());
-    SmartDashboard.putData("Auto Options:", m_commandChooser);
+    m_commandChooser.addOption("7. Shoot High and Drive + Get ball + Shoot Low", new AutoDriveShootHighIntakeLow());
+    SmartDashboard.putData("Auto Choices:", m_commandChooser);
     SmartDashboard.putNumber("X Factor", 0.9d);
     SmartDashboard.putNumber("Z Factor", 0.65d);
     // Configure the button bindings

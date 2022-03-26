@@ -8,6 +8,7 @@ import frc.robot.RobotContainer;
 import frc.robot.utils.MathHelper;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class AutoSubsystem extends SubsystemBase {
   /**
@@ -63,31 +64,26 @@ public class AutoSubsystem extends SubsystemBase {
   }
 
   public boolean hasDrivenFarEnough(double startPos, double distance) {
-		//currentPosition = ((Robot.rm.lift.getSensorCollection().getQuadraturePosition() + Robot.rm.climb.getSensorCollection().getQuadraturePosition()) / 2) ;
 		currentPosition = (RobotContainer.m_driveTrain.getEncoderAverage());
 		targetPulseCount = distance / circumferenceInInches * pulsesPerRotation;
 		targetPosition = startPos + targetPulseCount;
 		if (RobotState.isAutonomous() == true) {
+			//SmartDashboard.putNumber("CurrentPos", currentPosition);
+			//SmartDashboard.putNumber("TargetPos", targetPosition);
 			if (distance > 0) { // Driving FORWARD
 				if (currentPosition >= targetPosition) {
 					return true;
-				}
-				else {
+				} else {
 					return false;
 				}
-			}
-			else { // Driving REVERSE
-				//System.out.println("CurrentPosition: " + currentPosition);
-				//System.out.println("TargetPosition: " + targetPosition);
+			} else { // Driving REVERSE
 				if (currentPosition >= targetPosition) {
 					return false;
-				}
-				else {
+				} else {
 					return true;
 				}
 			}
-		}
-		else {
+		} else {
 			return true;
 		}
 	}
@@ -133,7 +129,7 @@ public class AutoSubsystem extends SubsystemBase {
 	}
 
 	public void shootBallLow() {
-		RobotContainer.m_ballShooter.shooterManualMode();
+		RobotContainer.m_ballShooter.shooterManualModeAuto();
 		Timer.delay(0.33);
 		RobotContainer.m_ballIndexer.enableManIndexer();
 		Timer.delay(0.75);
@@ -144,7 +140,7 @@ public class AutoSubsystem extends SubsystemBase {
 
 	public void shootBallHigh() {
 		RobotContainer.m_ballShooter.enableShooterMotor();
-		Timer.delay(0.875);
+		Timer.delay(1);
 		RobotContainer.m_ballIndexer.enableManIndexer();
 		Timer.delay(0.75);
 		BallIndexerSubsystem.indexMotor.set(0);
@@ -154,55 +150,48 @@ public class AutoSubsystem extends SubsystemBase {
 
     public boolean gyroTurn(double degrees) {
 		a_drive.gyro.reset();
-		while ((RobotState.isAutonomous() == true) && outsideDeadZone()) {
+		while ((RobotState.isAutonomous() == true) && insideAngle(degrees)) {
 			RobotContainer.m_driveTrain.autonomousDrive(0, calcP(degrees));
 		}
 		stop();
 		return true;
 	}
 
-	public boolean outsideDeadZone() {
-		return (readGyro() < -Constants.GYRO_DEADZONE && readGyro() > +Constants.GYRO_DEADZONE);
+	// angle is -180 to 180
+
+	public boolean insideAngle(double angle) {
+		return (readGyro() > angle-Constants.GYRO_DEADZONE) && (readGyro() < angle+Constants.GYRO_DEADZONE);
 	}
     
 	protected boolean gyroDrive(double distance) {
 		RobotContainer.m_driveTrain.gyro.reset();
-		//RobotContainer.m_driveTrain.resetAllEncoders();
 		startPosition = RobotContainer.m_driveTrain.getEncoderAverage();
-		//double targetPosition = (distance / circumferenceInInches * pulsesPerRotation);
-		//System.out.println(hasDrivenFarEnough(startPosition, distance));
 		while (hasDrivenFarEnough(startPosition, distance) == false) {
-			//RobotContainer.m_driveTrain.updateEncoders();
-			double zRot = outsideDeadZone() ? 0.0d : calcP(0);
+			double zRot = insideAngle(0) ? 0.0d : calcP(0);
 			if (distance > 0) {
-				// a_drive.drive();
 				RobotContainer.m_driveTrain.autonomousDrive(-Constants.AUTO_MAX_X, zRot);  // FORWARD
 			} else {
-				// a_drive.drive();
 				RobotContainer.m_driveTrain.autonomousDrive(Constants.AUTO_MAX_X, zRot);  // REVERSE
 			}
-			
-			//System.out.println("Gyro Heading: " + drift);
 		}
-		
 		stop();
 		return true;
 	}
 
-	public boolean gyroDriveTurn(double distance) {
+	/*public boolean gyroDriveTurn(double distance) {
 		startPosition = RobotContainer.m_driveTrain.getEncoderAverage();
 		while (hasDrivenFarEnough(startPosition, distance) == false) {
-			double zRot = outsideDeadZone() ? 0.0d : calcP(0);
+			double zRot = insideAngle(0) ? 0.0d : calcP(0);
 			if (distance > 0) {
-				RobotContainer.m_driveTrain.autonomousDrive(-Constants.AUTO_MAX_X, zRot);  // FORWARD
+				RobotContainer.m_driveTrain.autonomousDrive(-Constants.AUTO_MAX_X, -zRot);  // FORWARD
 			} else {
-				RobotContainer.m_driveTrain.autonomousDrive(Constants.AUTO_MAX_X, zRot);  // REVERSE
+				RobotContainer.m_driveTrain.autonomousDrive(Constants.AUTO_MAX_X, -zRot);  // REVERSE
 			}
 		}
 		
 		stop();
 		return true;
-	}
+	}*/
 
 
 	protected boolean limelightDrive(double distance) {
